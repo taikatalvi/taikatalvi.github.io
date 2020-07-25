@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        @media screen and (max-width: 640px) {
+            .main-image, .post-image{
+                width: 300px  !important;
+                height: 213px !important;
+            }
+        }
+
+        .main-image, .post-image{
+            display: block;
+            margin: 30px auto;
+            width: 600px;
+            height: 400px;
+            transition:width .5s ease;
+        }
+
+        article>p{
+            text-align: justify;
+        }
+
+
+    </style>
+</head>
+<body>
+
+
+<article>
+    <img src="../img/projectX.jpg" class="main-image">
+
+    <p> 
+     Microcontroller Atmega 16 with 4-channel ADC is connected to the following elements: a variable resistor, thermistor, and photoresistor. 
+     The board is an additional connector for ISP programming of microcontroller and LED to indicate operation. 
+     Role COM-port adapter performs USB-To-UART, which also feeds the device.</p>
+
+    <img src="../img/scheme.jpeg" class="post-image">
+
+    <p>
+     Written in Delphi a special program begins sending data bytes for COM-port. 
+     The microcontroller receives them and depending on the transmitted byte value starts to read from a channel ADC. 
+     This data is then transmitted to a computer program and building a graph. 
+     The program can choose which element to read data. 
+     In the future, instead of above mentioned items can be connected linear photodetector and build an image in a computer program.  
+    </p>
+
+    
+</article>
+
+</body>
+</html>

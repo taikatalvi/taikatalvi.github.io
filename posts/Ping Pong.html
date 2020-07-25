@@ -1,0 +1,277 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        @media screen and (max-width: 640px) {
+            #canvas{
+                width: 220px !important;
+                height: 220px !important;
+                margin: 0 auto !important;
+            }
+        }
+
+        #canvas{
+            display: block;
+            margin: 50px auto 0;
+            box-shadow: 0 0 5px 0 #000;
+        }
+
+        #block{
+            font-size: 20pt;
+            text-align: center;
+            width:50%;
+            display: block;
+            margin: 10px auto;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<article>
+    
+    <div id="block">Click to play</div>
+    <canvas id="canvas" width="500px" height="500px">Some text in canvas</canvas>
+
+</article>
+
+
+<script>
+
+    function PingPong()
+    {
+
+        function init()
+        {
+            var gameEngine;
+            var block = document.getElementById('block');
+            var canvas = document.getElementById('canvas');
+            var context = canvas.getContext('2d');
+            var stop = false;
+
+
+            function Rect(color, x, y, width, height)
+            {
+                this.color = color;
+                this.x = x;
+                this.y = y;
+                this.width = width;
+                this.height = height;
+                this.draw = function(){
+                    context.fillStyle = this.color;
+                    context.fillRect(this.x, this.y, this.width, this.height);
+                };
+            }
+
+            function Arc(color, x, y, radius)
+            {
+                this.color = color;
+                this.x = x;
+                this.y = y;
+                this.radius = radius;
+                this.draw = function(){
+                    context.fillStyle = this.color;
+                    context.beginPath();
+                    context.arc(this.x, this.y, this.radius, 0, Math.PI*2, false);
+                    context.closePath();
+                    context.fill();
+                };
+            }
+
+            var player = new Rect('#000', (canvas.width/2 - 100), canvas.height - 15, 100, 10);
+            var ai     = new Rect('#000', (canvas.width/2 - 100), 5, 100, 10);
+            var ball   = new Arc( '#00f',  canvas.width/2, canvas.height/2, 7);
+            var ball_speed = 8;
+
+            player.speed_x = 25;
+            player.score = 0;
+            ball.speed_x = ball_speed;
+            ball.speed_y = ball_speed;
+            ball.score = 0;
+            ai.speed_x = 7;
+            ai.score = 0;
+
+            function drawGame()
+            {
+                player.draw();
+                ai.draw();
+                ball.draw();
+
+
+                if(player.x > canvas.width)
+                    player.x = -player.width;
+
+                if(player.x <  -player.width)
+                    player.x = canvas.width;
+
+                if(ai.x > canvas.width)
+                    ai.x = -ai.width;
+
+                if(ai.x <  -ai.width)
+                    ai.x = canvas.width;
+            }
+
+            
+            document.addEventListener('keydown', function()
+            {
+                if(event.keyCode == 68)
+                    player.x += player.speed_x;
+                if(event.keyCode == 65)
+                    player.x -= player.speed_x;
+            });
+
+            canvas.addEventListener("click", function()
+            {
+                if (stop == true) 
+                    {
+                        setGameStep();
+                        stop = false;
+                    }
+                    else
+                    {
+                        gameEngineStart(gameLoop);
+                        stop = true;
+                    }
+            });
+            
+            document.addEventListener('mousemove', function(e)
+            {
+                player.x = (e.clientX - canvas.width) - 20;
+                canvas.style.cursor = "none";
+            }, false);
+
+             canvas.addEventListener("touchstart", function()
+             {
+                gameEngineStart(gameLoop);
+                stop = false;
+            });
+
+            canvas.addEventListener('touchmove', function(event) 
+            {
+                event.preventDefault();
+                    player.x = event.targetTouches[0].pageX + 150;
+                
+            }, false);
+
+            canvas.addEventListener("touchend", function(){
+                setGameStep();
+                stop = true;                
+            });
+
+
+
+            function collision(objA, objB)
+            {
+                if (objA.x + objA.width > objB.x  &&
+                        objA.x < objB.x + objB.radius &&
+                        objA.y + objA.height > objB.y &&
+                        objA.y < objB.y + objB.radius)
+                {
+                    return true;
+                }
+
+                else
+                {
+                    return false;
+                }
+            }
+
+            function Play()
+            {
+                aiMove();
+
+                if(((ball.x + ball.radius) > canvas.width) || ball.x < 0)
+                    ball.speed_x = -ball.speed_x;
+
+                if(ball.y < 0)
+                {
+                    player.score += 1;
+                    ball.y = canvas.width/2;
+                }
+
+                if(ball.y > canvas.height)
+                {
+                    ai.score += 1;
+                    ball.y = canvas.width/2;
+                }
+
+                if(collision(ai, ball) && ball.speed_y < 0 || collision(player, ball) && ball.speed_y > 0)
+                    ball.speed_y = -ball.speed_y;
+
+                ball.x += ball.speed_x;
+                ball.y += ball.speed_y;
+            }
+
+            function aiMove()
+            {
+                if(ball.y < canvas.width/2)
+                {
+                    if(ball.x < ai.x)
+                        ai.speed_x = -(Math.random() * (22 - 3) + 3);
+                    if(ball.x > ai.x + ai.width)
+                        ai.speed_x = Math.random() * (22 - 3) + 3;
+                }
+
+                if(ball.speed_x < 0 && ball.speed_y < 0)
+                    player.color = "#f00";
+                if(ball.speed_x > 0 && ball.speed_y < 0)
+                    player.color = "#0f0";
+
+                if(ball.y > canvas.width/2)
+                {
+                    player.color = "#000";
+                    ai.speed_x = 0;
+                }
+
+                ai.x += ai.speed_x;
+
+            }
+
+            var nextGameStep = (function(){
+                return requestAnimationFrame ||
+                        webkitRequestAnimationFrame  ||
+                        mozRequestAnimationFrame     ||
+                        oRequestAnimationFrame       ||
+                        msRequestAnimationFrame      ||
+                        function (callback)
+                        {
+                            setTimeout(callback, 1000/60);
+                        }
+            })();
+            function gameEngineStart(callback)
+            {
+                gameEngine = callback;
+                gameEngineSet();
+            }
+            function gameEngineSet(callback)
+            {
+                gameEngine();
+                nextGameStep(gameEngineSet);
+            }
+            function setGameStep(callback)
+            {
+                gameEngine = callback;
+            }
+            function gameLoop()
+            {
+                context.clearRect(0, 0, canvas.width, canvas.height);
+                drawGame();
+                Play();
+                block.innerHTML = "AI: " + ai.score + " Player: " + player.score;
+            }
+
+            drawGame();
+            
+        }
+
+        init();
+
+    } PingPong();
+
+</script> 
+
+</body>
+</html>
