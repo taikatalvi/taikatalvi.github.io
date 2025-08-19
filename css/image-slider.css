@@ -1,0 +1,229 @@
+/* Image Slider Styles */
+.image-slider {
+    position: relative;
+    width: 600px;
+    height: 400px;
+    margin: 30px auto;
+    overflow: hidden;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    background: #000;
+    transition: all 0.3s ease-in-out;
+    transform: scale(1);
+}
+
+.image-slider img {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+    background: #000;
+}
+
+.image-slider img.active {
+    opacity: 1;
+}
+
+/* Hover effect on the entire slider container */
+.image-slider:hover {
+    transform: scale(1.05) !important;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.6) !important;
+    z-index: 100 !important;
+    cursor: pointer;
+}
+
+.slider-nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin: 20px auto;
+    width: 600px;
+}
+
+.slider-btn {
+    background: #222;
+    color: white;
+    border: 2px solid #9F8A33;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    user-select: none;
+}
+
+.slider-btn:hover {
+    background: #9F8A33;
+    transform: scale(1.1);
+}
+
+.slider-btn:active {
+    transform: scale(0.95);
+}
+
+.slider-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.slider-indicators {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin: 15px auto;
+}
+
+.indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #ccc;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.indicator:hover {
+    background: #999;
+    border-color: #9F8A33;
+}
+
+.indicator.active {
+    background: #9F8A33;
+    border-color: #9F8A33;
+}
+
+/* Loading animation */
+.image-slider.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 40px;
+    height: 40px;
+    margin: -20px 0 0 -20px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #9F8A33;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    z-index: 10;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Fade transition effects */
+.image-slider.fade img {
+    transition: opacity 0.5s ease-in-out;
+}
+
+.image-slider.slide img {
+    transition: transform 0.5s ease-in-out;
+}
+
+.image-slider.slide img {
+    transform: translateX(100%);
+}
+
+.image-slider.slide img.active {
+    transform: translateX(0);
+}
+
+.image-slider.slide img.prev {
+    transform: translateX(-100%);
+}
+
+/* Responsive design */
+@media screen and (max-width: 768px) {
+    .image-slider {
+        width: 500px;
+        height: 333px;
+    }
+    
+    .slider-nav {
+        width: 500px;
+    }
+}
+
+@media screen and (max-width: 640px) {
+    .image-slider {
+        width: 300px !important;
+        height: 200px !important;
+    }
+    
+    .image-slider img {
+        width: 300px !important;
+        height: 200px !important;
+    }
+    
+    .slider-nav {
+        width: 300px !important;
+    }
+    
+    .slider-btn {
+        width: 35px;
+        height: 35px;
+        font-size: 16px;
+    }
+    
+    .indicator {
+        width: 10px;
+        height: 10px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .image-slider {
+        width: 280px !important;
+        height: 187px !important;
+    }
+    
+    .slider-nav {
+        width: 280px !important;
+    }
+}
+
+/* Accessibility improvements */
+.slider-btn:focus {
+    outline: 2px solid #9F8A33;
+    outline-offset: 2px;
+}
+
+.indicator:focus {
+    outline: 2px solid #9F8A33;
+    outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .slider-btn {
+        border-width: 3px;
+    }
+    
+    .indicator {
+        border-width: 2px;
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    .image-slider img,
+    .slider-btn,
+    .indicator {
+        transition: none;
+    }
+    
+    .slider-btn:hover {
+        transform: none;
+    }
+}

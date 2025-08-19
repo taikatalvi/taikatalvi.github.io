@@ -1,54 +1,109 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title></title>
+    <title>Economical readout unit</title>
     <style>
         @media screen and (max-width: 640px) {
-            .main-image, .post-image{
-                width: 300px  !important;
+            .image-slider {
+                width: 300px !important;
+                height: 213px !important;
+            }
+            .image-slider img {
+                width: 300px !important;
                 height: 213px !important;
             }
         }
 
-        .main-image, .post-image{
-            display: block;
-            margin: 30px auto;
+        .image-slider {
+            position: relative;
             width: 600px;
             height: 400px;
-            transition:width .5s ease;
+            margin: 30px auto;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            background: #000;
+            transition: all 0.3s ease-in-out;
+            transform: scale(1);
         }
 
-        article>p{
+        .image-slider img {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            opacity: 0;
+            transition: all 0.3s ease-in-out;
+            background: #000;
+        }
+
+        .image-slider img.active {
+            opacity: 1;
+        }
+
+        /* Hover effect on the entire slider container */
+        .image-slider:hover {
+            transform: scale(1.05) !important;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.6) !important;
+            z-index: 100 !important;
+        }
+
+        /* Remove individual image hover effects */
+        .image-slider img.active:hover {
+            transform: none !important;
+            background-color: transparent !important;
+        }
+
+        /* Scope styles to post content only */
+        .post-content article>p{
             text-align: justify;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 0 20px;
+            line-height: 1.6;
+            color: #ffffff !important;
         }
-
-
     </style>
 </head>
 <body>
 
+<div class="post-content">
+    <article>
+        <div class="image-slider" id="imageSlider">
+            <img src="../img/projectX.jpg" alt="Project X - Microcontroller Board" class="active">
+            <img src="../img/scheme.jpeg" alt="Circuit Scheme - ADC Interface">
+        </div>
 
-<article>
-    <img src="../img/projectX.jpg" class="main-image">
+        <p> 
+         Microcontroller Atmega 16 with 4-channel ADC is connected to the following elements: a variable resistor, thermistor, and photoresistor. 
+         The board is an additional connector for ISP programming of microcontroller and LED to indicate operation. 
+         Role COM-port adapter performs USB-To-UART, which also feeds the device.</p>
 
-    <p> 
-     Microcontroller Atmega 16 with 4-channel ADC is connected to the following elements: a variable resistor, thermistor, and photoresistor. 
-     The board is an additional connector for ISP programming of microcontroller and LED to indicate operation. 
-     Role COM-port adapter performs USB-To-UART, which also feeds the device.</p>
+        <p>
+         Written in Delphi a special program begins sending data bytes for COM-port. 
+         The microcontroller receives them and depending on the transmitted byte value starts to read from a channel ADC. 
+         This data is then transmitted to a computer program and building a graph. 
+         The program can choose which element to read data. 
+         In the future, instead of above mentioned items can be connected linear photodetector and build an image in computer program.  
+        </p>
+    </article>
+</div>
 
-    <img src="../img/scheme.jpeg" class="post-image">
-
-    <p>
-     Written in Delphi a special program begins sending data bytes for COM-port. 
-     The microcontroller receives them and depending on the transmitted byte value starts to read from a channel ADC. 
-     This data is then transmitted to a computer program and building a graph. 
-     The program can choose which element to read data. 
-     In the future, instead of above mentioned items can be connected linear photodetector and build an image in a computer program.  
-    </p>
-
-    
-</article>
+<script>
+    // Initialize slider without navigation buttons when DOM is loaded
+    document.addEventListener('DOMContentLoaded', function() {
+        if (typeof ImageSlider !== 'undefined') {
+            new ImageSlider('imageSlider', {
+                showNavigation: false,
+                showIndicators: true,
+                autoPlay: true,
+                autoPlayInterval: 5000
+            });
+        }
+    });
+</script>
 
 </body>
 </html>

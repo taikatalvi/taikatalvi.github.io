@@ -118,6 +118,17 @@ function Main()
                     div.innerHTML = PushXMLRequest('GET', '../posts/' + 
                                     articles[i].querySelector('h1').innerHTML + '.html', false);
 
+                    // Initialize image sliders if they exist in the loaded content
+                    setTimeout(() => {
+                        const sliders = div.querySelectorAll('.image-slider');
+                        sliders.forEach(slider => {
+                            const containerId = slider.id;
+                            if (containerId && typeof ImageSlider !== 'undefined') {
+                                new ImageSlider(containerId);
+                            }
+                        });
+                    }, 100);
+
                     if (div.querySelector('script') !== null) 
                     {
                         let script = document.createElement('script');

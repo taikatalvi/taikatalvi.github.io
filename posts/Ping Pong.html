@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title></title>
+    <title>Ping Pong Game</title>
     <style>
         @media screen and (max-width: 640px) {
             #canvas{
@@ -24,19 +24,112 @@
             width:50%;
             display: block;
             margin: 10px auto;
+            color: #ffffff;
         }
 
+        /* Scope all styles to the post content only */
+        .post-content article>p{
+            text-align: justify;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 0 20px;
+            line-height: 1.6;
+            color: #ffffff !important;
+        }
+
+        .post-content .game-description {
+            background: rgba(245, 245, 245, 0.1);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px auto;
+            max-width: 800px;
+            border-left: 4px solid #9F8A33;
+            backdrop-filter: blur(10px);
+        }
+
+        .post-content .game-description h3 {
+            color: #ffffff !important;
+            margin-top: 0;
+        }
+
+        .post-content .game-description p {
+            color: #ffffff !important;
+        }
+
+        .post-content .game-description ul {
+            color: #ffffff !important;
+        }
+
+        .post-content .game-description li {
+            color: #ffffff !important;
+        }
+
+        .post-content .game-controls {
+            background: rgba(232, 244, 248, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px auto;
+            max-width: 800px;
+            border-left: 4px solid #007acc;
+            backdrop-filter: blur(10px);
+        }
+
+        .post-content .game-controls h4 {
+            color: #9F8A33 !important;
+            margin-top: 0;
+        }
+
+        .post-content .game-controls ul {
+            margin: 10px 0;
+            padding-left: 20px;
+            color: #ffffff !important;
+        }
+
+        .post-content .game-controls li {
+            margin: 5px 0;
+            color: #ffffff !important;
+        }
+
+        .post-content .game-controls strong {
+            color: #9F8A33 !important;
+        }
     </style>
 </head>
 
 <body>
 
-<article>
-    
-    <div id="block">Click to play</div>
-    <canvas id="canvas" width="500px" height="500px">Some text in canvas</canvas>
+<div class="post-content">
+    <article>
+        <div class="game-description">
+            <h3>Game Description</h3>
+            <p>A classic Ping Pong game built with HTML5 Canvas and JavaScript. Control your paddle to play against the AI and try to score more points!</p>
+        </div>
 
-</article>
+        <div class="game-controls">
+            <h4>Controls</h4>
+            <ul>
+                <li><strong>Mouse:</strong> Move your paddle left and right</li>
+                <li><strong>Touch:</strong> Swipe on mobile devices</li>
+                <li><strong>Keyboard:</strong> Use arrow keys for navigation</li>
+            </ul>
+        </div>
+        
+        <div id="block">Click to play</div>
+        <canvas id="canvas" width="500px" height="500px">Some text in canvas</canvas>
+
+        <div class="game-description">
+            <h3>Features</h3>
+            <ul>
+                <li>Responsive design for mobile and desktop</li>
+                <li>AI opponent with adaptive difficulty</li>
+                <li>Touch and mouse support</li>
+                <li>Smooth animations and physics</li>
+                <li>Score tracking</li>
+            </ul>
+        </div>
+
+    </article>
+</div>
 
 
 <script>
@@ -81,13 +174,14 @@
                 };
             }
 
-            var player = new Rect('#000', (canvas.width/2 - 100), canvas.height - 15, 100, 10);
-            var ai     = new Rect('#000', (canvas.width/2 - 100), 5, 100, 10);
+            var player = new Rect('#000', (canvas.width/2 - 50), canvas.height - 15, 100, 10);
+            var ai     = new Rect('#000', (canvas.width/2 - 50), 5, 100, 10);
             var ball   = new Arc( '#00f',  canvas.width/2, canvas.height/2, 7);
             var ball_speed = 8;
 
             player.speed_x = 25;
             player.score = 0;
+            player.targetX = player.x; // Добавляем целевую позицию для плавности
             ball.speed_x = ball_speed;
             ball.speed_y = ball_speed;
             ball.score = 0;
@@ -139,7 +233,15 @@
             
             document.addEventListener('mousemove', function(e)
             {
-                player.x = (e.clientX - canvas.width) - 20;
+                var rect = canvas.getBoundingClientRect();
+               
+                var mouseX = e.clientX - rect.left;
+               
+                player.targetX = mouseX - (player.width / 2);
+               
+                if (player.targetX < 0) player.targetX = 0;
+                if (player.targetX + player.width > canvas.width) player.targetX = canvas.width - player.width;
+               
                 canvas.style.cursor = "none";
             }, false);
 
@@ -152,8 +254,15 @@
             canvas.addEventListener('touchmove', function(event) 
             {
                 event.preventDefault();
-                    player.x = event.targetTouches[0].pageX + 150;
-                
+               
+                var rect = canvas.getBoundingClientRect();
+               
+                var touchX = event.targetTouches[0].clientX - rect.left;
+              
+                player.targetX = touchX - (player.width / 2);
+              
+                if (player.targetX < 0) player.targetX = 0;
+                if (player.targetX + player.width > canvas.width) player.targetX = canvas.width - player.width;
             }, false);
 
             canvas.addEventListener("touchend", function(){
@@ -165,14 +274,13 @@
 
             function collision(objA, objB)
             {
-                if (objA.x + objA.width > objB.x  &&
+                if (objA.x + objA.width > objB.x - objB.radius &&
                         objA.x < objB.x + objB.radius &&
-                        objA.y + objA.height > objB.y &&
+                        objA.y + objA.height > objB.y - objB.radius &&
                         objA.y < objB.y + objB.radius)
                 {
                     return true;
                 }
-
                 else
                 {
                     return false;
@@ -181,6 +289,17 @@
 
             function Play()
             {
+               
+                if (player.targetX !== undefined) 
+                {
+                    var diff = player.targetX - player.x;
+                    if (Math.abs(diff) > 1) {
+                        player.x += diff * 1; 
+                    } else {
+                        player.x = player.targetX;
+                    }
+                }
+
                 aiMove();
 
                 if(((ball.x + ball.radius) > canvas.width) || ball.x < 0)
@@ -189,13 +308,19 @@
                 if(ball.y < 0)
                 {
                     player.score += 1;
-                    ball.y = canvas.width/2;
+                    ball.y = canvas.height/2;
+                    ball.x = canvas.width/2;
+                    ball.speed_x = ball_speed * (Math.random() > 0.5 ? 1 : -1);
+                    ball.speed_y = ball_speed;
                 }
 
                 if(ball.y > canvas.height)
                 {
                     ai.score += 1;
-                    ball.y = canvas.width/2;
+                    ball.y = canvas.height/2;
+                    ball.x = canvas.width/2;
+                    ball.speed_x = ball_speed * (Math.random() > 0.5 ? 1 : -1);
+                    ball.speed_y = -ball_speed;
                 }
 
                 if(collision(ai, ball) && ball.speed_y < 0 || collision(player, ball) && ball.speed_y > 0)
@@ -207,7 +332,7 @@
 
             function aiMove()
             {
-                if(ball.y < canvas.width/2)
+                if(ball.y < canvas.height/2)
                 {
                     if(ball.x < ai.x)
                         ai.speed_x = -(Math.random() * (22 - 3) + 3);
@@ -220,7 +345,7 @@
                 if(ball.speed_x > 0 && ball.speed_y < 0)
                     player.color = "#0f0";
 
-                if(ball.y > canvas.width/2)
+                if(ball.y > canvas.height/2)
                 {
                     player.color = "#000";
                     ai.speed_x = 0;
