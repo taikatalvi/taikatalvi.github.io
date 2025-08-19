@@ -19,12 +19,14 @@
         }
 
         #block{
-            font-size: 20pt;
+            font-size: 18pt;
             text-align: center;
-            width:50%;
+            width: 80%;
             display: block;
             margin: 10px auto;
             color: #ffffff;
+            min-height: 30px;
+            line-height: 1.2;
         }
 
         /* Scope all styles to the post content only */
@@ -177,23 +179,30 @@
             var player = new Rect('#000', (canvas.width/2 - 50), canvas.height - 15, 100, 10);
             var ai     = new Rect('#000', (canvas.width/2 - 50), 5, 100, 10);
             var ball   = new Arc( '#00f',  canvas.width/2, canvas.height/2, 7);
-            var ball_speed = 8;
+            var ball_speed = 3; // Reduced speed from 8 to 3
 
             player.speed_x = 25;
             player.score = 0;
-            player.targetX = player.x; // Добавляем целевую позицию для плавности
+            player.targetX = player.x; // Add target position for smooth movement
             ball.speed_x = ball_speed;
             ball.speed_y = ball_speed;
             ball.score = 0;
-            ai.speed_x = 7;
+            ai.speed_x = 3; // Reduced AI speed from 7 to 3
             ai.score = 0;
+            
+            // Game state variables
+            var gameState = 'playing'; // 'playing', 'roundPause', 'gameOver'
+            var gameOverTimer = 0;
+            var roundPauseTimer = 0;
+            var gameOverMessage = '';
+            var roundMessage = '';
+            var winningScore = 5; // Score needed to win
 
             function drawGame()
             {
                 player.draw();
                 ai.draw();
                 ball.draw();
-
 
                 if(player.x > canvas.width)
                     player.x = -player.width;
@@ -206,6 +215,55 @@
 
                 if(ai.x <  -ai.width)
                     ai.x = canvas.width;
+                    
+                // Draw game over message and timer
+                if(gameState === 'gameOver') {
+                    drawGameOverScreen();
+                } else if(gameState === 'roundPause') {
+                    drawRoundPauseScreen();
+                }
+            }
+            
+            function drawGameOverScreen() {
+                // Semi-transparent overlay
+                context.fillStyle = 'rgba(0, 0, 0, 0.7)';
+                context.fillRect(0, 0, canvas.width, canvas.height);
+                
+                // Game over message
+                context.fillStyle = '#ffffff';
+                context.font = 'bold 36px Arial';
+                context.textAlign = 'center';
+                context.fillText(gameOverMessage, canvas.width/2, canvas.height/2 - 40);
+                
+                // Timer countdown
+                var timeLeft = Math.ceil((3000 - gameOverTimer) / 1000);
+                context.font = '24px Arial';
+                context.fillText('Restarting in ' + timeLeft + '...', canvas.width/2, canvas.height/2 + 20);
+                
+                // Final scores
+                context.font = '18px Arial';
+                context.fillText('Final Score - AI: ' + ai.score + ' Player: ' + player.score, canvas.width/2, canvas.height/2 + 60);
+            }
+            
+            function drawRoundPauseScreen() {
+                // Semi-transparent overlay
+                context.fillStyle = 'rgba(0, 0, 0, 0.5)';
+                context.fillRect(0, 0, canvas.width, canvas.height);
+                
+                // Round message
+                context.fillStyle = '#ffffff';
+                context.font = 'bold 28px Arial';
+                context.textAlign = 'center';
+                context.fillText(roundMessage, canvas.width/2, canvas.height/2 - 20);
+                
+                // Timer countdown
+                var timeLeft = Math.ceil((3000 - roundPauseTimer) / 1000);
+                context.font = '20px Arial';
+                context.fillText('Next round in ' + timeLeft + '...', canvas.width/2, canvas.height/2 + 20);
+                
+                // Current scores
+                context.font = '16px Arial';
+                context.fillText('AI: ' + ai.score + ' - Player: ' + player.score, canvas.width/2, canvas.height/2 + 50);
             }
 
             
@@ -287,14 +345,57 @@
                 }
             }
 
+            function resetGame() {
+                player.score = 0;
+                ai.score = 0;
+                ball.x = canvas.width/2;
+                ball.y = canvas.height/2;
+                ball.speed_x = ball_speed * (Math.random() > 0.5 ? 1 : -1);
+                ball.speed_y = ball_speed * (Math.random() > 0.5 ? 1 : -1);
+                player.x = canvas.width/2 - 50;
+                ai.x = canvas.width/2 - 50;
+                gameState = 'playing';
+                gameOverTimer = 0;
+                roundPauseTimer = 0;
+                gameOverMessage = '';
+                roundMessage = '';
+            }
+            
+            function resetRound() {
+                ball.x = canvas.width/2;
+                ball.y = canvas.height/2;
+                ball.speed_x = ball_speed * (Math.random() > 0.5 ? 1 : -1);
+                ball.speed_y = ball_speed * (Math.random() > 0.5 ? 1 : -1);
+                player.x = canvas.width/2 - 50;
+                ai.x = canvas.width/2 - 50;
+                gameState = 'playing';
+                roundPauseTimer = 0;
+                roundMessage = '';
+            }
+
             function Play()
             {
+                if(gameState === 'gameOver') {
+                    gameOverTimer += 16; // Approximate frame time (60fps)
+                    if(gameOverTimer >= 3000) { // 3 seconds
+                        resetGame();
+                    }
+                    return;
+                }
+                
+                if(gameState === 'roundPause') {
+                    roundPauseTimer += 16; // Approximate frame time (60fps)
+                    if(roundPauseTimer >= 3000) { // 3 seconds
+                        resetRound();
+                    }
+                    return;
+                }
                
                 if (player.targetX !== undefined) 
                 {
                     var diff = player.targetX - player.x;
                     if (Math.abs(diff) > 1) {
-                        player.x += diff * 1; 
+                        player.x += diff * 0.15; // Reduced movement speed for smoother control
                     } else {
                         player.x = player.targetX;
                     }
@@ -308,19 +409,39 @@
                 if(ball.y < 0)
                 {
                     player.score += 1;
-                    ball.y = canvas.height/2;
-                    ball.x = canvas.width/2;
-                    ball.speed_x = ball_speed * (Math.random() > 0.5 ? 1 : -1);
-                    ball.speed_y = ball_speed;
+                    
+                    // Check for win condition
+                    if(player.score >= winningScore) {
+                        gameState = 'gameOver';
+                        gameOverMessage = 'YOU WIN!';
+                        gameOverTimer = 0;
+                        return;
+                    }
+                    
+                    // Start round pause
+                    gameState = 'roundPause';
+                    roundMessage = 'Player Scores!';
+                    roundPauseTimer = 0;
+                    return;
                 }
 
                 if(ball.y > canvas.height)
                 {
                     ai.score += 1;
-                    ball.y = canvas.height/2;
-                    ball.x = canvas.width/2;
-                    ball.speed_x = ball_speed * (Math.random() > 0.5 ? 1 : -1);
-                    ball.speed_y = -ball_speed;
+                    
+                    // Check for lose condition
+                    if(ai.score >= winningScore) {
+                        gameState = 'gameOver';
+                        gameOverMessage = 'GAME OVER';
+                        gameOverTimer = 0;
+                        return;
+                    }
+                    
+                    // Start round pause
+                    gameState = 'roundPause';
+                    roundMessage = 'AI Scores!';
+                    roundPauseTimer = 0;
+                    return;
                 }
 
                 if(collision(ai, ball) && ball.speed_y < 0 || collision(player, ball) && ball.speed_y > 0)
@@ -335,9 +456,9 @@
                 if(ball.y < canvas.height/2)
                 {
                     if(ball.x < ai.x)
-                        ai.speed_x = -(Math.random() * (22 - 3) + 3);
+                        ai.speed_x = -(Math.random() * (8 - 2) + 2); // Reduced from 22-3 to 8-2
                     if(ball.x > ai.x + ai.width)
-                        ai.speed_x = Math.random() * (22 - 3) + 3;
+                        ai.speed_x = Math.random() * (8 - 2) + 2; // Reduced from 22-3 to 8-2
                 }
 
                 if(ball.speed_x < 0 && ball.speed_y < 0)
@@ -385,7 +506,16 @@
                 context.clearRect(0, 0, canvas.width, canvas.height);
                 drawGame();
                 Play();
-                block.innerHTML = "AI: " + ai.score + " Player: " + player.score;
+                
+                if(gameState === 'playing') {
+                    block.innerHTML = "AI: " + ai.score + " Player: " + player.score + " (First to " + winningScore + " wins!)";
+                } else if(gameState === 'gameOver') {
+                    var timeLeft = Math.ceil((3000 - gameOverTimer) / 1000);
+                    block.innerHTML = gameOverMessage + " - Restarting in " + timeLeft + "...";
+                } else if(gameState === 'roundPause') {
+                    var timeLeft = Math.ceil((3000 - roundPauseTimer) / 1000);
+                    block.innerHTML = roundMessage + " - Next round in " + timeLeft + "...";
+                }
             }
 
             drawGame();
