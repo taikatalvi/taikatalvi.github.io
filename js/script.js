@@ -104,22 +104,33 @@ function Main()
         {
             event.preventDefault();
 
-            if (this.innerHTML === 'More') 
+            const button = this;
+            const article = articles[i];
+            
+            if (button.innerHTML === 'More') 
             {
-                if (articles[i].querySelector('div') === null) 
+                // Add loading state to button
+                button.classList.add('loading');
+                button.innerHTML = 'Loading...';
+                
+                // Add expanding animation to post
+                article.classList.add('expanding');
+                
+                if (article.querySelector('.article') === null) 
                 {
                     let div = document.createElement('div');
-
                     div.className = "article";
+                    article.insertBefore(div, button);
 
-                    articles[i].insertBefore(div, this);
-
-                
+                    // Load content
                     div.innerHTML = PushXMLRequest('GET', '../posts/' + 
-                                    articles[i].querySelector('h1').innerHTML + '.html', false);
+                                    article.querySelector('h1').innerHTML + '.html', false);
 
-                    // Initialize image sliders if they exist in the loaded content
+                    // Animate content appearance
                     setTimeout(() => {
+                        div.classList.add('show');
+                        
+                        // Initialize image sliders if they exist in the loaded content
                         const sliders = div.querySelectorAll('.image-slider');
                         sliders.forEach(slider => {
                             const containerId = slider.id;
@@ -127,26 +138,57 @@ function Main()
                                 new ImageSlider(containerId);
                             }
                         });
-                    }, 100);
 
-                    if (div.querySelector('script') !== null) 
-                    {
-                        let script = document.createElement('script');
-                        script.type = "text/javascript";
-                        script.text = div.querySelector('script').innerHTML;
+                        // Execute any scripts in the loaded content
+                        if (div.querySelector('script') !== null) 
+                        {
+                            let script = document.createElement('script');
+                            script.type = "text/javascript";
+                            script.text = div.querySelector('script').innerHTML;
+                            document.body.appendChild(script);
+                        }
                         
-                        document.body.appendChild(script);
-                    }
+                        // Update button state
+                        button.classList.remove('loading');
+                        button.innerHTML = 'Close';
+                        
+                        // Remove expanding animation
+                        setTimeout(() => {
+                            article.classList.remove('expanding');
+                        }, 300);
+                        
+                    }, 50);
                 }
                 else
-                    articles[i].querySelector('article').style.display = 'block';
-                
-                this.innerHTML = 'Close';
+                {
+                    const existingDiv = article.querySelector('.article');
+                    existingDiv.classList.remove('hide');
+                    existingDiv.classList.add('show');
+                    
+                    // Update button state
+                    setTimeout(() => {
+                        button.classList.remove('loading');
+                        button.innerHTML = 'Close';
+                        article.classList.remove('expanding');
+                    }, 300);
+                }
             }
             else
             {
-                articles[i].querySelector('article').style.display = 'none';
-                this.innerHTML = 'More';
+                // Add collapsing animation to post
+                article.classList.add('collapsing');
+                
+                const existingDiv = article.querySelector('.article');
+                if (existingDiv) {
+                    existingDiv.classList.remove('show');
+                    existingDiv.classList.add('hide');
+                }
+                
+                // Update button after animation
+                setTimeout(() => {
+                    button.innerHTML = 'More';
+                    article.classList.remove('collapsing');
+                }, 600);
             }
 
         });

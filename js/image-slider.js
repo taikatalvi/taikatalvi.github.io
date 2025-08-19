@@ -110,6 +110,15 @@ class ImageSlider {
             this.container.addEventListener('mouseenter', () => this.pauseAutoPlay());
             this.container.addEventListener('mouseleave', () => this.startAutoPlay());
         }
+        
+        // Add click event for modal - only for active image
+        this.images.forEach((img, index) => {
+            img.addEventListener('click', (e) => {
+                e.stopPropagation();
+                // Open modal window with current active image
+                this.openModal(this.currentIndex);
+            });
+        });
     }
     
     setupTouchEvents() {
@@ -249,11 +258,184 @@ class ImageSlider {
         this.options.autoPlay = false;
     }
     
+    openModal(index) {
+        // If index is not provided, use current active index
+        if (index === undefined) {
+            index = this.currentIndex;
+        }
+        
+        this.createModal();
+        this.currentModalIndex = index;
+        this.showModalImage(index);
+        this.modal.classList.add('show');
+        document.body.style.overflow = 'hidden';
+    }
+    
+    createModal() {
+        if (this.modal) return;
+        
+        this.modal = document.createElement('div');
+        this.modal.className = 'image-modal';
+        
+        const modalContent = document.createElement('div');
+        modalContent.className = 'image-modal-content';
+        
+        // Header
+        const modalHeader = document.createElement('div');
+        modalHeader.className = 'image-modal-header';
+        
+        const modalTitle = document.createElement('h3');
+        modalTitle.className = 'image-modal-title';
+        modalTitle.textContent = 'Image Viewer';
+        
+        const closeBtn = document.createElement('button');
+        closeBtn.className = 'image-modal-close';
+        closeBtn.innerHTML = '×';
+        closeBtn.onclick = () => this.closeModal();
+        
+        modalHeader.appendChild(modalTitle);
+        modalHeader.appendChild(closeBtn);
+        
+        // Body
+        const modalBody = document.createElement('div');
+        modalBody.className = 'image-modal-body';
+        
+        const modalImg = document.createElement('img');
+        modalImg.className = 'modal-image';
+        
+        const prevBtn = document.createElement('button');
+        prevBtn.className = 'image-modal-nav image-modal-prev';
+        prevBtn.innerHTML = '‹';
+        prevBtn.onclick = (e) => {
+            e.stopPropagation();
+            this.modalPrevious();
+        };
+        
+        const nextBtn = document.createElement('button');
+        nextBtn.className = 'image-modal-nav image-modal-next';
+        nextBtn.innerHTML = '›';
+        nextBtn.onclick = (e) => {
+            e.stopPropagation();
+            this.modalNext();
+        };
+        
+        modalBody.appendChild(modalImg);
+        modalBody.appendChild(prevBtn);
+        modalBody.appendChild(nextBtn);
+        
+        // Footer
+        const modalFooter = document.createElement('div');
+        modalFooter.className = 'image-modal-footer';
+        
+        const infoDiv = document.createElement('p');
+        infoDiv.className = 'image-modal-info';
+        
+        modalFooter.appendChild(infoDiv);
+        
+        // Assemble modal
+        modalContent.appendChild(modalHeader);
+        modalContent.appendChild(modalBody);
+        modalContent.appendChild(modalFooter);
+        
+        this.modal.appendChild(modalContent);
+        
+        // Close modal on background click
+        this.modal.onclick = (e) => {
+            if (e.target === this.modal) {
+                this.closeModal();
+            }
+        };
+        
+        // Keyboard navigation for modal
+        this.modalKeyHandler = (e) => {
+            if (!this.modal.classList.contains('show')) return;
+            
+            switch (e.key) {
+                case 'Escape':
+                    this.closeModal();
+                    break;
+                case 'ArrowLeft':
+                    e.preventDefault();
+                    this.modalPrevious();
+                    break;
+                case 'ArrowRight':
+                    e.preventDefault();
+                    this.modalNext();
+                    break;
+            }
+        };
+        
+        document.addEventListener('keydown', this.modalKeyHandler);
+        document.body.appendChild(this.modal);
+        
+        this.modalImg = modalImg;
+        this.modalInfo = infoDiv;
+        this.modalTitle = modalTitle;
+        this.modalPrevBtn = prevBtn;
+        this.modalNextBtn = nextBtn;
+    }
+    
+    showModalImage(index) {
+        if (!this.modal || index < 0 || index >= this.totalImages) return;
+        
+        const img = this.images[index];
+        this.modalImg.src = img.src;
+        this.modalImg.alt = img.alt || `Image ${index + 1}`;
+        
+        // Update title
+        this.modalTitle.textContent = img.alt || `Image ${index + 1}`;
+        
+        // Update info
+        this.modalInfo.textContent = `${index + 1} of ${this.totalImages}`;
+        
+        // Update navigation buttons
+        this.modalPrevBtn.style.display = (this.totalImages > 1) ? 'flex' : 'none';
+        this.modalNextBtn.style.display = (this.totalImages > 1) ? 'flex' : 'none';
+        
+        this.currentModalIndex = index;
+    }
+    
+    modalNext() {
+        const nextIndex = (this.currentModalIndex + 1) % this.totalImages;
+        this.showModalImage(nextIndex);
+    }
+    
+    modalPrevious() {
+        const prevIndex = (this.currentModalIndex - 1 + this.totalImages) % this.totalImages;
+        this.showModalImage(prevIndex);
+    }
+    
+    closeModal() {
+        if (!this.modal) return;
+        
+        this.modal.classList.remove('show');
+        document.body.style.overflow = '';
+        
+        setTimeout(() => {
+            if (this.modal && this.modal.parentNode) {
+                this.modal.parentNode.removeChild(this.modal);
+                this.modal = null;
+                this.modalImg = null;
+                this.modalInfo = null;
+                this.modalPrevBtn = null;
+                this.modalNextBtn = null;
+            }
+        }, 300);
+    }
+
     destroy() {
         this.pauseAutoPlay();
         
         if (this.options.keyboardEnabled) {
             document.removeEventListener('keydown', this.handleKeyDown.bind(this));
+        }
+        
+        if (this.modalKeyHandler) {
+            document.removeEventListener('keydown', this.modalKeyHandler);
+        }
+        
+        if (this.modal) {
+            this.closeModal();
         }
         
         // Remove event listeners and clean up
