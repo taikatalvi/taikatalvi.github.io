@@ -132,11 +132,12 @@ function Main()
                         
                         // Initialize image sliders if they exist in the loaded content
                         const sliders = div.querySelectorAll('.image-slider');
-                        sliders.forEach(slider => {
+                        sliders.forEach(slider => 
+                        {
                             const containerId = slider.id;
-                            if (containerId && typeof ImageSlider !== 'undefined') {
+
+                            if (containerId && typeof ImageSlider !== 'undefined') 
                                 new ImageSlider(containerId);
-                            }
                         });
 
                         // Execute any scripts in the loaded content
@@ -165,8 +166,26 @@ function Main()
                     existingDiv.classList.remove('hide');
                     existingDiv.classList.add('show');
                     
+                    // Re-initialize image sliders when reopening post
+                    const sliders = existingDiv.querySelectorAll('.image-slider');
+                    sliders.forEach(slider => 
+                    {
+                        const containerId = slider.id;
+                        if (containerId && typeof ImageSlider !== 'undefined') 
+                        {
+                            // Remove existing indicators first
+                            const existingIndicators = document.querySelector(`.indicators-${containerId}`);
+                            
+                            if (existingIndicators)
+                                existingIndicators.remove();
+                            
+                            new ImageSlider(containerId);
+                        }
+                    });
+                    
                     // Update button state
-                    setTimeout(() => {
+                    setTimeout(() => 
+                    {
                         button.classList.remove('loading');
                         button.innerHTML = 'Close';
                         article.classList.remove('expanding');
@@ -182,6 +201,18 @@ function Main()
                 if (existingDiv) {
                     existingDiv.classList.remove('show');
                     existingDiv.classList.add('hide');
+                    
+                    // Remove slider indicators when closing post
+                    const sliders = existingDiv.querySelectorAll('.image-slider');
+                    sliders.forEach(slider => {
+                        const containerId = slider.id;
+                        if (containerId) {
+                            const indicators = document.querySelector(`.indicators-${containerId}`);
+                            if (indicators) {
+                                indicators.remove();
+                            }
+                        }
+                    });
                 }
                 
                 // Update button after animation

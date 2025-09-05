@@ -3,10 +3,13 @@
  * A reusable image slider component with touch support and accessibility features
  */
 
-class ImageSlider {
-    constructor(containerId, options = {}) {
+class ImageSlider 
+{
+    constructor(containerId, options = {}) 
+    {
         this.container = document.getElementById(containerId);
-        this.options = {
+        this.options = 
+        {
             autoPlay: options.autoPlay !== false,
             autoPlayInterval: options.autoPlayInterval || 5000,
             transitionType: options.transitionType || 'fade', // 'fade' or 'slide'
@@ -27,8 +30,10 @@ class ImageSlider {
         this.init();
     }
     
-    init() {
-        if (!this.container) {
+    init() 
+    {
+        if (!this.container) 
+        {
             console.error('ImageSlider: Container not found');
             return;
         }
@@ -36,25 +41,26 @@ class ImageSlider {
         this.images = Array.from(this.container.querySelectorAll('img'));
         this.totalImages = this.images.length;
         
-        if (this.totalImages === 0) {
+        if (this.totalImages === 0) 
+        {
             console.warn('ImageSlider: No images found');
             return;
         }
         
         this.createNavigation();
-        if (this.options.showIndicators) {
+
+        if (this.options.showIndicators) 
             this.createIndicators();
-        }
         
         this.setupEventListeners();
         this.showImage(0);
         
-        if (this.options.autoPlay) {
+        if (this.options.autoPlay) 
             this.startAutoPlay();
-        }
     }
     
-    createNavigation() {
+    createNavigation() 
+    {
         if (!this.options.showNavigation) return;
         
         const nav = document.createElement('div');
@@ -80,11 +86,13 @@ class ImageSlider {
         this.nextBtn = nextBtn;
     }
     
-    createIndicators() {
+    createIndicators() 
+    {
         const indicatorsContainer = document.createElement('div');
-        indicatorsContainer.className = 'slider-indicators';
+        indicatorsContainer.className = `slider-indicators indicators-${this.container.id}`;
         
-        for (let i = 0; i < this.totalImages; i++) {
+        for (let i = 0; i < this.totalImages; i++) 
+        {
             const indicator = document.createElement('span');
             indicator.className = 'indicator';
             indicator.setAttribute('aria-label', `Go to image ${i + 1}`);
@@ -93,27 +101,30 @@ class ImageSlider {
             this.indicators.push(indicator);
         }
         
+        // Add indicators right after the slider container
         this.container.parentNode.insertBefore(indicatorsContainer, this.container.nextSibling);
     }
     
-    setupEventListeners() {
-        if (this.options.keyboardEnabled) {
+    setupEventListeners() 
+    {
+        if (this.options.keyboardEnabled) 
             document.addEventListener('keydown', this.handleKeyDown.bind(this));
-        }
         
-        if (this.options.touchEnabled) {
+        if (this.options.touchEnabled)
             this.setupTouchEvents();
-        }
         
         // Pause auto-play on hover
-        if (this.options.autoPlay) {
+        if (this.options.autoPlay) 
+        {
             this.container.addEventListener('mouseenter', () => this.pauseAutoPlay());
             this.container.addEventListener('mouseleave', () => this.startAutoPlay());
         }
         
         // Add click event for modal - only for active image
-        this.images.forEach((img, index) => {
-            img.addEventListener('click', (e) => {
+        this.images.forEach((img, index) => 
+        {
+            img.addEventListener('click', (e) => 
+            {
                 e.stopPropagation();
                 // Open modal window with current active image
                 this.openModal(this.currentIndex);
@@ -121,18 +132,21 @@ class ImageSlider {
         });
     }
     
-    setupTouchEvents() {
+    setupTouchEvents() 
+    {
         let startX = 0;
         let startY = 0;
         let startTime = 0;
         
-        this.container.addEventListener('touchstart', (e) => {
+        this.container.addEventListener('touchstart', (e) => 
+        {
             startX = e.touches[0].clientX;
             startY = e.touches[0].clientY;
             startTime = Date.now();
         });
         
-        this.container.addEventListener('touchend', (e) => {
+        this.container.addEventListener('touchend', (e) => 
+        {
             const endX = e.changedTouches[0].clientX;
             const endY = e.changedTouches[0].clientY;
             const endTime = Date.now();
@@ -142,18 +156,18 @@ class ImageSlider {
             const deltaTime = endTime - startTime;
             
             // Only handle horizontal swipes
-            if (Math.abs(deltaX) > Math.abs(deltaY) && deltaTime < 500) {
-                if (deltaX > 50) {
-                    this.previous();
-                } else if (deltaX < -50) {
-                    this.next();
-                }
+            if (Math.abs(deltaX) > Math.abs(deltaY) && deltaTime < 500) 
+            {
+                if (deltaX > 50)       this.previous();
+                else if (deltaX < -50) this.next();
             }
         });
     }
     
-    handleKeyDown(e) {
-        switch (e.key) {
+    handleKeyDown(e) 
+    {
+        switch (e.key) 
+        {
             case 'ArrowLeft':
                 e.preventDefault();
                 this.previous();
@@ -173,35 +187,34 @@ class ImageSlider {
         }
     }
     
-    showImage(index) {
-        if (this.isTransitioning || index < 0 || index >= this.totalImages) {
+    showImage(index) 
+    {
+        if (this.isTransitioning || index < 0 || index >= this.totalImages)
             return;
-        }
         
         this.isTransitioning = true;
         
         // Remove active class from all images and indicators
-        this.images.forEach(img => {
+        this.images.forEach(img => 
+        {
             img.classList.remove('active', 'prev');
         });
         
-        if (this.indicators.length > 0) {
+        if (this.indicators.length > 0)
             this.indicators.forEach(ind => ind.classList.remove('active'));
-        }
         
         // Add active class to current image and indicator
         this.images[index].classList.add('active');
-        if (this.indicators.length > 0) {
+
+        if (this.indicators.length > 0)
             this.indicators[index].classList.add('active');
-        }
         
         // Update navigation button states
-        if (this.prevBtn) {
+        if (this.prevBtn)
             this.prevBtn.disabled = !this.options.loop && index === 0;
-        }
-        if (this.nextBtn) {
+
+        if (this.nextBtn)
             this.nextBtn.disabled = !this.options.loop && index === this.totalImages - 1;
-        }
         
         this.currentIndex = index;
         
@@ -209,60 +222,65 @@ class ImageSlider {
         this.container.setAttribute('aria-label', `Image ${index + 1} of ${this.totalImages}`);
         
         // Transition complete
-        setTimeout(() => {
+        setTimeout(() => 
+        {
             this.isTransitioning = false;
         }, 500);
     }
     
-    next() {
-        if (this.options.loop) {
+    next() 
+    {
+        if (this.options.loop) 
             this.showImage((this.currentIndex + 1) % this.totalImages);
-        } else if (this.currentIndex < this.totalImages - 1) {
+        else if (this.currentIndex < this.totalImages - 1)
             this.showImage(this.currentIndex + 1);
-        }
     }
     
-    previous() {
-        if (this.options.loop) {
+    previous() 
+    {
+        if (this.options.loop)
             this.showImage((this.currentIndex - 1 + this.totalImages) % this.totalImages);
-        } else if (this.currentIndex > 0) {
+        else if (this.currentIndex > 0)
             this.showImage(this.currentIndex - 1);
-        }
     }
     
-    goToImage(index) {
-        if (index >= 0 && index < this.totalImages) {
+    goToImage(index) 
+    {
+        if (index >= 0 && index < this.totalImages)
             this.showImage(index);
-        }
     }
     
-    startAutoPlay() {
-        if (this.autoPlayTimer) {
+    startAutoPlay() 
+    {
+        if (this.autoPlayTimer)
             clearInterval(this.autoPlayTimer);
-        }
         
-        this.autoPlayTimer = setInterval(() => {
+        this.autoPlayTimer = setInterval(() => 
+        {
             this.next();
         }, this.options.autoPlayInterval);
     }
     
-    pauseAutoPlay() {
-        if (this.autoPlayTimer) {
+    pauseAutoPlay() 
+    {
+        if (this.autoPlayTimer) 
+        {
             clearInterval(this.autoPlayTimer);
             this.autoPlayTimer = null;
         }
     }
     
-    stopAutoPlay() {
+    stopAutoPlay() 
+    {
         this.pauseAutoPlay();
         this.options.autoPlay = false;
     }
     
-    openModal(index) {
+    openModal(index) 
+    {
         // If index is not provided, use current active index
-        if (index === undefined) {
+        if (index === undefined)
             index = this.currentIndex;
-        }
         
         this.createModal();
         this.currentModalIndex = index;
@@ -271,7 +289,8 @@ class ImageSlider {
         document.body.style.overflow = 'hidden';
     }
     
-    createModal() {
+    createModal() 
+    {
         if (this.modal) return;
         
         this.modal = document.createElement('div');
@@ -306,7 +325,9 @@ class ImageSlider {
         const prevBtn = document.createElement('button');
         prevBtn.className = 'image-modal-nav image-modal-prev';
         prevBtn.innerHTML = '‹';
-        prevBtn.onclick = (e) => {
+
+        prevBtn.onclick = (e) => 
+        {
             e.stopPropagation();
             this.modalPrevious();
         };
@@ -314,7 +335,9 @@ class ImageSlider {
         const nextBtn = document.createElement('button');
         nextBtn.className = 'image-modal-nav image-modal-next';
         nextBtn.innerHTML = '›';
-        nextBtn.onclick = (e) => {
+
+        nextBtn.onclick = (e) => 
+        {
             e.stopPropagation();
             this.modalNext();
         };
@@ -340,17 +363,18 @@ class ImageSlider {
         this.modal.appendChild(modalContent);
         
         // Close modal on background click
-        this.modal.onclick = (e) => {
-            if (e.target === this.modal) {
-                this.closeModal();
-            }
+        this.modal.onclick = (e) => 
+        {
+            if (e.target === this.modal) this.closeModal();
         };
         
         // Keyboard navigation for modal
-        this.modalKeyHandler = (e) => {
+        this.modalKeyHandler = (e) => 
+        {
             if (!this.modal.classList.contains('show')) return;
             
-            switch (e.key) {
+            switch (e.key) 
+            {
                 case 'Escape':
                     this.closeModal();
                     break;
@@ -375,7 +399,8 @@ class ImageSlider {
         this.modalNextBtn = nextBtn;
     }
     
-    showModalImage(index) {
+    showModalImage(index) 
+    {
         if (!this.modal || index < 0 || index >= this.totalImages) return;
         
         const img = this.images[index];
@@ -395,24 +420,29 @@ class ImageSlider {
         this.currentModalIndex = index;
     }
     
-    modalNext() {
+    modalNext() 
+    {
         const nextIndex = (this.currentModalIndex + 1) % this.totalImages;
         this.showModalImage(nextIndex);
     }
     
-    modalPrevious() {
+    modalPrevious() 
+    {
         const prevIndex = (this.currentModalIndex - 1 + this.totalImages) % this.totalImages;
         this.showModalImage(prevIndex);
     }
     
-    closeModal() {
+    closeModal() 
+    {
         if (!this.modal) return;
         
         this.modal.classList.remove('show');
         document.body.style.overflow = '';
         
-        setTimeout(() => {
-            if (this.modal && this.modal.parentNode) {
+        setTimeout(() => 
+        {
+            if (this.modal && this.modal.parentNode) 
+            {
                 this.modal.parentNode.removeChild(this.modal);
                 this.modal = null;
                 this.modalImg = null;
@@ -423,22 +453,19 @@ class ImageSlider {
         }, 300);
     }
 
-    destroy() {
+    destroy() 
+    {
         this.pauseAutoPlay();
         
-        if (this.options.keyboardEnabled) {
+        if (this.options.keyboardEnabled)
             document.removeEventListener('keydown', this.handleKeyDown.bind(this));
-        }
         
-        if (this.modalKeyHandler) {
+        if (this.modalKeyHandler)
             document.removeEventListener('keydown', this.modalKeyHandler);
-        }
         
-        if (this.modal) {
+        if (this.modal)
             this.closeModal();
-        }
         
-        // Remove event listeners and clean up
         this.container = null;
         this.images = [];
         this.indicators = [];
@@ -446,17 +473,17 @@ class ImageSlider {
 }
 
 // Auto-initialize sliders when DOM is loaded
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function() 
+{
     const sliders = document.querySelectorAll('.image-slider');
-    sliders.forEach(slider => {
+
+    sliders.forEach(slider => 
+    {
         const containerId = slider.id;
-        if (containerId) {
+        if (containerId)
             new ImageSlider(containerId);
-        }
     });
 });
 
 // Export for use in other modules
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = ImageSlider;
-}
+if (typeof module !== 'undefined' && module.exports) module.exports = ImageSlider;

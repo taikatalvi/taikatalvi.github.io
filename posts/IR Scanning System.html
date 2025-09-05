@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>IR Scanning System</title>
+    <style>
+        body 
+        {
+            font-family: "Droid Serif", Cambria, "Helvetica Neue", Helvetica, Arial, sans-serif;
+            background-color: #222;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container 
+        {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 10px;
+        }
+
+        h1 
+        {
+            text-align: center;
+            font-size: 28px;
+            margin-bottom: 30px;
+        }
+
+        h2 
+        {
+            font-size: 22px;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+
+        p 
+        {
+            font-size: 18px;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        strong 
+        {
+            color: #9F8A33;
+        }
+
+        .image-slider 
+        {
+            position: relative;
+            width: 600px;
+            height: 400px;
+            margin: 30px auto;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            background: #000;
+            transition: all 0.3s ease-in-out;
+            transform: scale(1);
+        }
+
+        .image-slider img 
+        {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            opacity: 0;
+            transition: all 0.3s ease-in-out;
+            background: #000;
+        }
+
+        .image-slider img.active 
+        {
+            opacity: 1;
+        }
+
+        .image-slider:hover 
+        {
+            transform: scale(1.05) !important;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6) !important;
+            z-index: 100 !important;
+        }
+
+        @media screen and (max-width: 640px) 
+        {
+            .container 
+            {
+                padding: 10px;
+            }
+
+            h1 
+            {
+                font-size: 24px;
+            }
+
+            h2 
+            {
+                font-size: 20px;
+            }
+
+            p 
+            {
+                font-size: 16px;
+                line-height: 1.4;
+            }
+
+            .image-slider 
+            {
+                width: 300px !important;
+                height: 213px !important;
+            }
+
+            .image-slider img 
+            {
+                width: 300px !important;
+                height: 213px !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="image-slider" id="irSlider">
+            <img src="../img/IMG_0249.jpeg" alt="IR Scanning System Overview" class="active">
+            <img src="../img/IMG_0252.jpeg" alt="Optical Assembly with Mirror">
+            <img src="../img/Optical scheme.png" alt="Servo Motor Scanning Mechanism">
+            <img src="../img/PC Screenshot.png" alt="ATmega16 Control Board">
+        </div>
+
+        <p>This project presents a fully functional infrared scanning system designed for real-time thermal imaging
+            applications. The system combines precision optics, embedded control, and digital signal processing to
+            create detailed thermal maps of observed scenes.</p>
+
+        <p>The optical core consists of a 48mm diameter spherical mirror that focuses infrared radiation onto a
+            single-element photodetector positioned precisely in the focal plane. This configuration provides excellent
+            thermal sensitivity while maintaining a compact form factor.</p>
+
+        <p>The mechanical scanning mechanism employs a servo motor that rotates the entire optical assembly through 180
+            degrees, enabling coverage of the target area. A custom-designed limiting plate works in conjunction with an
+            optical interrupter to provide precise timing control, ensuring that temperature readings are captured only
+            during specific scanning positions. This approach allows the system to perform line-by-line spatial
+            scanning, building up a complete thermal image over time.</p>
+
+        <p>At the heart of the electronic control system lies an <strong>Atmel ATmega16 microcontroller</strong>, which
+            orchestrates the entire scanning process. The microcontroller generates PWM signals to drive the servo motor
+            while simultaneously monitoring the optical interrupter for timing cues. When the limiting plate triggers
+            the optical sensor, the system begins capturing temperature data from the IR photodetector and transmits
+            this information to a connected PC via UART interface.</p>
+
+        <p>The digital processing chain handles the conversion from analog thermal signals to meaningful visual data.
+            Real-time interpolation techniques reconstruct the spatial thermal distribution, with each pixel's color
+            corresponding to the measured temperature at that location.</p>
+
+        <p>The complete system demonstrates successful thermal imaging capabilities, validated through extensive
+            experimental testing that confirms both the optical performance and the accuracy of the digital signal
+            processing algorithms.</p>
+    </div>
+
+    <script>
+        // Initialize slider without navigation buttons when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function () 
+        {
+            if (typeof ImageSlider !== 'undefined') 
+            {
+                new ImageSlider('irSlider', 
+                {
+                    showNavigation: false,
+                    showIndicators: true,
+                    autoPlay: true,
+                    autoPlayInterval: 5000
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>

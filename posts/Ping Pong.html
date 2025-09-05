@@ -4,21 +4,25 @@
     <meta charset="UTF-8">
     <title>Ping Pong Game</title>
     <style>
-        @media screen and (max-width: 640px) {
-            #canvas{
+        @media screen and (max-width: 640px) 
+        {
+            #canvas
+            {
                 width: 220px !important;
                 height: 220px !important;
                 margin: 0 auto !important;
             }
         }
 
-        #canvas{
+        #canvas
+        {
             display: block;
             margin: 50px auto 0;
             box-shadow: 0 0 5px 0 #000;
         }
 
-        #block{
+        #block
+        {
             font-size: 18pt;
             text-align: center;
             width: 80%;
@@ -30,7 +34,8 @@
         }
 
         /* Scope all styles to the post content only */
-        .post-content article>p{
+        .post-content article > p
+        {
             text-align: justify;
             max-width: 800px;
             margin: 20px auto;
@@ -39,7 +44,8 @@
             color: #ffffff !important;
         }
 
-        .post-content .game-description {
+        .post-content .game-description 
+        {
             background: rgba(245, 245, 245, 0.1);
             padding: 20px;
             border-radius: 8px;
@@ -49,24 +55,29 @@
             backdrop-filter: blur(10px);
         }
 
-        .post-content .game-description h3 {
+        .post-content .game-description h3 
+        {
             color: #ffffff !important;
             margin-top: 0;
         }
 
-        .post-content .game-description p {
+        .post-content .game-description p 
+        {
             color: #ffffff !important;
         }
 
-        .post-content .game-description ul {
+        .post-content .game-description ul 
+        {
             color: #ffffff !important;
         }
 
-        .post-content .game-description li {
+        .post-content .game-description li 
+        {
             color: #ffffff !important;
         }
 
-        .post-content .game-controls {
+        .post-content .game-controls 
+        {
             background: rgba(232, 244, 248, 0.1);
             padding: 15px;
             border-radius: 8px;
@@ -76,23 +87,27 @@
             backdrop-filter: blur(10px);
         }
 
-        .post-content .game-controls h4 {
+        .post-content .game-controls h4 
+        {
             color: #9F8A33 !important;
             margin-top: 0;
         }
 
-        .post-content .game-controls ul {
+        .post-content .game-controls ul 
+        {
             margin: 10px 0;
             padding-left: 20px;
             color: #ffffff !important;
         }
 
-        .post-content .game-controls li {
+        .post-content .game-controls li 
+        {
             margin: 5px 0;
             color: #ffffff !important;
         }
 
-        .post-content .game-controls strong {
+        .post-content .game-controls strong 
+        {
             color: #9F8A33 !important;
         }
     </style>
@@ -155,7 +170,8 @@
                 this.y = y;
                 this.width = width;
                 this.height = height;
-                this.draw = function(){
+                this.draw = function()
+                {
                     context.fillStyle = this.color;
                     context.fillRect(this.x, this.y, this.width, this.height);
                 };
@@ -167,7 +183,8 @@
                 this.x = x;
                 this.y = y;
                 this.radius = radius;
-                this.draw = function(){
+                this.draw = function()
+                {
                     context.fillStyle = this.color;
                     context.beginPath();
                     context.arc(this.x, this.y, this.radius, 0, Math.PI*2, false);
@@ -217,14 +234,18 @@
                     ai.x = canvas.width;
                     
                 // Draw game over message and timer
-                if(gameState === 'gameOver') {
+                if(gameState === 'gameOver') 
+                {
                     drawGameOverScreen();
-                } else if(gameState === 'roundPause') {
+                } 
+                else if(gameState === 'roundPause') 
+                {
                     drawRoundPauseScreen();
                 }
             }
             
-            function drawGameOverScreen() {
+            function drawGameOverScreen() 
+            {
                 // Semi-transparent overlay
                 context.fillStyle = 'rgba(0, 0, 0, 0.7)';
                 context.fillRect(0, 0, canvas.width, canvas.height);
@@ -245,7 +266,8 @@
                 context.fillText('Final Score - AI: ' + ai.score + ' Player: ' + player.score, canvas.width/2, canvas.height/2 + 60);
             }
             
-            function drawRoundPauseScreen() {
+            function drawRoundPauseScreen() 
+            {
                 // Semi-transparent overlay
                 context.fillStyle = 'rgba(0, 0, 0, 0.5)';
                 context.fillRect(0, 0, canvas.width, canvas.height);
@@ -278,15 +300,15 @@
             canvas.addEventListener("click", function()
             {
                 if (stop == true) 
-                    {
-                        setGameStep();
-                        stop = false;
-                    }
-                    else
-                    {
-                        gameEngineStart(gameLoop);
-                        stop = true;
-                    }
+                {
+                    setGameStep();
+                    stop = false;
+                }
+                else
+                {
+                    gameEngineStart(gameLoop);
+                    stop = true;
+                }
             });
             
             document.addEventListener('mousemove', function(e)
@@ -323,7 +345,8 @@
                 if (player.targetX + player.width > canvas.width) player.targetX = canvas.width - player.width;
             }, false);
 
-            canvas.addEventListener("touchend", function(){
+            canvas.addEventListener("touchend", function()
+            {
                 setGameStep();
                 stop = true;                
             });
@@ -345,7 +368,8 @@
                 }
             }
 
-            function resetGame() {
+            function resetGame() 
+            {
                 player.score = 0;
                 ai.score = 0;
                 ball.x = canvas.width/2;
@@ -361,7 +385,8 @@
                 roundMessage = '';
             }
             
-            function resetRound() {
+            function resetRound() 
+            {
                 ball.x = canvas.width/2;
                 ball.y = canvas.height/2;
                 ball.speed_x = ball_speed * (Math.random() > 0.5 ? 1 : -1);
@@ -375,28 +400,35 @@
 
             function Play()
             {
-                if(gameState === 'gameOver') {
+                if(gameState === 'gameOver') 
+                {
                     gameOverTimer += 16; // Approximate frame time (60fps)
-                    if(gameOverTimer >= 3000) { // 3 seconds
+                    
+                    if(gameOverTimer >= 3000) // 3 seconds
                         resetGame();
-                    }
+                    
                     return;
                 }
                 
-                if(gameState === 'roundPause') {
+                if(gameState === 'roundPause') 
+                {
                     roundPauseTimer += 16; // Approximate frame time (60fps)
-                    if(roundPauseTimer >= 3000) { // 3 seconds
+
+                    if(roundPauseTimer >= 3000) // 3 seconds
                         resetRound();
-                    }
+
                     return;
                 }
                
                 if (player.targetX !== undefined) 
                 {
                     var diff = player.targetX - player.x;
-                    if (Math.abs(diff) > 1) {
+                    if (Math.abs(diff) > 1) 
+                    {
                         player.x += diff * 0.15; // Reduced movement speed for smoother control
-                    } else {
+                    } 
+                    else 
+                    {
                         player.x = player.targetX;
                     }
                 }
@@ -411,7 +443,8 @@
                     player.score += 1;
                     
                     // Check for win condition
-                    if(player.score >= winningScore) {
+                    if(player.score >= winningScore) 
+                    {
                         gameState = 'gameOver';
                         gameOverMessage = 'YOU WIN!';
                         gameOverTimer = 0;
@@ -430,7 +463,8 @@
                     ai.score += 1;
                     
                     // Check for lose condition
-                    if(ai.score >= winningScore) {
+                    if(ai.score >= winningScore) 
+                    {
                         gameState = 'gameOver';
                         gameOverMessage = 'GAME OVER';
                         gameOverTimer = 0;
@@ -476,7 +510,8 @@
 
             }
 
-            var nextGameStep = (function(){
+            var nextGameStep = (function()
+            {
                 return requestAnimationFrame ||
                         webkitRequestAnimationFrame  ||
                         mozRequestAnimationFrame     ||
@@ -487,32 +522,41 @@
                             setTimeout(callback, 1000/60);
                         }
             })();
+
             function gameEngineStart(callback)
             {
                 gameEngine = callback;
                 gameEngineSet();
             }
+
             function gameEngineSet(callback)
             {
                 gameEngine();
                 nextGameStep(gameEngineSet);
             }
+
             function setGameStep(callback)
             {
                 gameEngine = callback;
             }
+
             function gameLoop()
             {
                 context.clearRect(0, 0, canvas.width, canvas.height);
                 drawGame();
                 Play();
                 
-                if(gameState === 'playing') {
+                if(gameState === 'playing') 
+                {
                     block.innerHTML = "AI: " + ai.score + " Player: " + player.score + " (First to " + winningScore + " wins!)";
-                } else if(gameState === 'gameOver') {
+                } 
+                else if(gameState === 'gameOver') 
+                {
                     var timeLeft = Math.ceil((3000 - gameOverTimer) / 1000);
                     block.innerHTML = gameOverMessage + " - Restarting in " + timeLeft + "...";
-                } else if(gameState === 'roundPause') {
+                } 
+                else if(gameState === 'roundPause') 
+                {
                     var timeLeft = Math.ceil((3000 - roundPauseTimer) / 1000);
                     block.innerHTML = roundMessage + " - Next round in " + timeLeft + "...";
                 }
