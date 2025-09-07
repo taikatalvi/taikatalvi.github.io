@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
-    <title>IR Scanning System</title>
+    <title>Bio-Inspired Vision System</title>
     <style>
         body 
         {
@@ -12,40 +11,40 @@
             padding: 20px;
             line-height: 1.6;
         }
-
+    
         .container 
         {
             max-width: 1200px;
             margin: 0 auto;
             padding: 10px;
         }
-
+    
         h1 
         {
             text-align: center;
             font-size: 28px;
             margin-bottom: 30px;
         }
-
+    
         h2 
         {
             font-size: 22px;
             margin-top: 30px;
             margin-bottom: 15px;
         }
-
+    
         p 
         {
             font-size: 18px;
             margin-bottom: 20px;
             text-align: justify;
         }
-
+    
         strong 
         {
             color: #9F8A33;
         }
-
+    
         .image-slider 
         {
             position: relative;
@@ -59,7 +58,7 @@
             transition: all 0.3s ease-in-out;
             transform: scale(1);
         }
-
+    
         .image-slider img 
         {
             position: absolute;
@@ -70,48 +69,48 @@
             transition: all 0.3s ease-in-out;
             background: #000;
         }
-
+    
         .image-slider img.active 
         {
             opacity: 1;
         }
-
+    
         .image-slider:hover 
         {
             transform: scale(1.05) !important;
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6) !important;
             z-index: 100 !important;
         }
-
+    
         @media screen and (max-width: 640px) 
         {
             .container 
             {
                 padding: 10px;
             }
-
+    
             h1 
             {
                 font-size: 24px;
             }
-
+    
             h2 
             {
                 font-size: 20px;
             }
-
+    
             p 
             {
                 font-size: 16px;
                 line-height: 1.4;
             }
-
+    
             .image-slider 
             {
                 width: 300px !important;
                 height: 213px !important;
             }
-
+    
             .image-slider img 
             {
                 width: 300px !important;
@@ -120,43 +119,30 @@
         }
     </style>
 </head>
-
 <body>
     <div class="container">
-        <div class="image-slider" id="irSlider">
-            <img src="../img/IR Scanning System/IMG_0249.jpeg" alt="IR Scanning System experiment" class="active">
-            <img src="../img/IR Scanning System/IMG_0252.jpeg" alt="Optical Assembly with Mirror">
-            <img src="../img/IR Scanning System/Optical scheme.png" alt="Optical scheme">
-            <img src="../img/IR Scanning System/PC Screenshot.png" alt="Program screenshot">
+        <div class="image-slider" id="bioVisionSlider">
+            <img src="../img/BICE/3D model.jpeg" alt="3D model 1" class="active">
+            <img src="../img/BICE/3D model 2.png" alt="3D model 2" class="active">
+            <img src="../img/BICE/Calibration.png" alt="Calibration" class="active">
+            <img src="../img/BICE/Disassembled.jpeg" alt="Disassembled prototype" class="active">
+            <img src="../img/BICE/Exp example 90 deg.png" alt="Experiment" class="active">
+            <img src="../img/BICE/Separate unit.png" alt="Separate unit" class="active">
+            <img src="../img/BICE/Optical flow and focus.png" alt="Optical flow and focus" class="active">
+            <img src="../img/BICE/Program Example.png" alt="Program example" class="active">
         </div>
-
-        <p>This project presents a fully functional infrared scanning system designed for real-time thermal imaging
-            applications. The system combines precision optics, embedded control, and digital signal processing to
-            create detailed thermal maps of observed scenes.</p>
-
-        <p>The optical core consists of a 48mm diameter spherical mirror that focuses infrared radiation onto a
-            single-element photodetector positioned precisely in the focal plane. This configuration provides excellent
-            thermal sensitivity while maintaining a compact form factor.</p>
-
-        <p>The mechanical scanning mechanism employs a servo motor that rotates the entire optical assembly through 180
-            degrees, enabling coverage of the target area. A custom-designed limiting plate works in conjunction with an
-            optical interrupter to provide precise timing control, ensuring that temperature readings are captured only
-            during specific scanning positions. This approach allows the system to perform line-by-line spatial
-            scanning, building up a complete thermal image over time.</p>
-
-        <p>At the heart of the electronic control system lies an <strong>Atmel ATmega16 microcontroller</strong>, which
-            orchestrates the entire scanning process. The microcontroller generates PWM signals to drive the servo motor
-            while simultaneously monitoring the optical interrupter for timing cues. When the limiting plate triggers
-            the optical sensor, the system begins capturing temperature data from the IR photodetector and transmits
-            this information to a connected PC via UART interface.</p>
-
-        <p>The digital processing chain handles the conversion from analog thermal signals to meaningful visual data.
-            Real-time interpolation techniques reconstruct the spatial thermal distribution, with each pixel's color
-            corresponding to the measured temperature at that location.</p>
-
-        <p>The complete system demonstrates successful thermal imaging capabilities, validated through extensive
-            experimental testing that confirms both the optical performance and the accuracy of the digital signal
-            processing algorithms.</p>
+        
+        <p>This project presents a revolutionary bio-inspired vision system that mimics the compound eyes of insects for autonomous navigation applications. The system addresses critical limitations of traditional cameras by implementing true parallel processing architecture.</p>
+        
+        <p>The multi-channel faceted system consists of independent elements, each containing its own optical system, photodetectors, signal amplifier, and microcontroller. This design enables simultaneous angular velocity measurements across a field of view exceeding ±90 degrees, performing over <strong>1000 measurements per second</strong> using economical hardware.</p>
+        
+        <p>Unlike conventional matrix cameras with sequential signal readout, each faceted element operates independently and processes data in parallel. This approach eliminates the bottleneck of limited processing channels compared to millions of photosensitive elements in traditional systems.</p>
+        
+        <p>Key advantages include panoramic awareness without mechanical scanning, high system reliability through redundant independent elements, and real-time collision threat detection through focus coordinate calculations. The system enables <strong>GPS-free navigation</strong> via visual odometry, measuring displacement vectors in three-dimensional space.</p>
+        
+        <p>Experimental validation on vehicles confirmed successful obstacle detection when threats occupied significant portions of the field of view. The system demonstrated practical applicability for autonomous navigation, particularly valuable for multicopters and robotic applications in GPS-denied environments.</p>
+        
+        <p>The bio-inspired architecture provides superior performance for dynamic obstacle avoidance, offering wide-angle coverage, rapid response times, and robust operation even with damaged components - characteristics that have proven successful in nature for over <strong>500 million years</strong>.</p>
     </div>
 
     <script>
@@ -165,7 +151,7 @@
         {
             if (typeof ImageSlider !== 'undefined') 
             {
-                new ImageSlider('irSlider', 
+                new ImageSlider('bioVisionSlider', 
                 {
                     showNavigation: false,
                     showIndicators: true,
@@ -176,5 +162,4 @@
         });
     </script>
 </body>
-
 </html>
