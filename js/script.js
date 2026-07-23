@@ -87,6 +87,14 @@ function SetupActiveSectionHighlight()
                 current = item;
         });
 
+        // Near the bottom of the page the last section (e.g. a short footer)
+        // may never reach the probe line, so activate it explicitly.
+        const at_bottom =
+            window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2;
+
+        if (at_bottom && sections.length > 0)
+            current = sections[sections.length - 1];
+
         sections.forEach(item => item.link.classList.toggle('active', item === current));
     }
 
