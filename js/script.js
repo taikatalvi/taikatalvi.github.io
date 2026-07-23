@@ -46,11 +46,18 @@ function ScrollTo(element)
     const header = document.querySelector('.page-header');
     const offset = header ? header.offsetHeight : 0;
 
+    // The sticky header's offsetTop equals the current scroll position when it
+    // is stuck, so it cannot be used as a target. Scrolling to the header
+    // simply means scrolling to the very top of the page.
+    const top = (element === header)
+        ? 0
+        : element.getBoundingClientRect().top + window.scrollY - offset;
+
     window.scrollTo(
     {
         'behavior': 'smooth',
         'left': 0,
-        'top': element.offsetTop - offset
+        'top': Math.max(0, top)
     });
 }
 
