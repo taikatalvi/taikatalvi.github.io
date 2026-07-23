@@ -20,10 +20,13 @@
 
 	.intro-description {
 		width: 100%;
-		/* Keep nowrap lines within the viewport on small screens */
-		font-size: clamp(13px, 4.9vw, 24px);
-		line-height: 1.35;
 		padding: 10px;
+	}
+
+	/* Allow the role line to wrap so it never overflows narrow screens */
+	.intro-role {
+		white-space: normal;
+		letter-spacing: 2px;
 	}
 
 	.main-feature {
@@ -55,16 +58,30 @@
 		padding: 15px 5px 20px;
 	}
 
-	.post > h1 {
-		font-size: 20pt;
+	.post-card {
+		flex-direction: column;
+		gap: 15px;
+		padding: 0 10px;
+	}
+
+	.post-preview {
+		width: 100%;
+		height: auto;
+		max-height: 220px;
+	}
+
+	.post-info h1 {
+		font-size: 18pt;
+		margin-bottom: 8px;
+	}
+
+	.post-info time {
+		font-size: 11pt;
 		margin-bottom: 10px;
 	}
 
-	.post > time {
+	.post-summary {
 		font-size: 12pt;
-		display: block;
-		text-align: center;
-		margin-bottom: 15px;
 	}
 
 	.btn-show {
@@ -107,8 +124,6 @@
 	}
 
 	.intro-description {
-		font-size: clamp(12px, 4.9vw, 22px);
-		line-height: 1.35;
 		padding: 5px;
 	}
 
@@ -122,8 +137,8 @@
 		padding: 10px 3px 15px;
 	}
 
-	.post > h1 {
-		font-size: 18pt;
+	.post-info h1 {
+		font-size: 16pt;
 	}
 
 	.btn-show {

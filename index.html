@@ -15,8 +15,11 @@
 	<link href="css/style.css" rel="stylesheet">
 	<link href="css/low-display-style.css" rel="stylesheet">
 	<link href="css/image-slider.css" rel="stylesheet">
-	<link href="https://fonts.googleapis.com/css?family=Kaushan+Script" rel="stylesheet">
-	<link href="https://fonts.googleapis.com/css?family=Droid+Serif" rel="stylesheet">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link
+		href="https://fonts.googleapis.com/css2?family=Kaushan+Script&family=Playfair+Display:wght@500;600&family=Source+Serif+4:wght@400;600&display=swap"
+		rel="stylesheet">
 
 </head>
 
@@ -40,13 +43,20 @@
 
 		<section class="main-intro">
 			<div class="intro-img"></div>
-			<div class="intro-description" id="intro"><span class="nowrap">Hello, my name is Vitalii Antonenko</span>
-				<br><span class="nowrap">I'm an embedded software engineer</span>
+			<div class="intro-description" id="intro">
+				<p class="intro-greeting">Hello, my name is</p>
+				<h2 class="intro-name">Vitalii Antonenko</h2>
+				<p class="intro-role">Embedded Software Engineer</p>
+				<div class="intro-actions">
+					<a href="#projects" class="btn-primary">View Projects</a>
+					<a href="#contact" class="btn-outline">Contact Me</a>
+				</div>
 			</div>
 		</section>
 
 		<section class="main-feature" id="about">
-			<div class="feature-description">Full cycle of optoelectronic devices and systems development.
+			<div class="feature-description">
+				<h3 class="feature-title">Full cycle of optoelectronic devices and systems development</h3>
 				<ul>
 					<li>Assembler for ARM, Atmel (AVR);</li>
 					<li>ANSI C/C++ (GCC, WinAVR);</li>
@@ -58,36 +68,61 @@
 			</div>
 
 			<div class="features">
-				<svg class="SVG">
-					<use href="#3D" />
-				</svg>
-				<svg class="SVG">
-					<use href="#PCB" />
-				</svg>
-				<svg class="SVG">
-					<use href="#SW" />
-				</svg>
-				<div class="SVG"></div>
+				<div class="skill-card">
+					<svg class="SVG">
+						<use href="#3D" />
+					</svg>
+					<span class="skill-label">3D Modeling</span>
+				</div>
+				<div class="skill-card">
+					<svg class="SVG">
+						<use href="#PCB" />
+					</svg>
+					<span class="skill-label">PCB Design</span>
+				</div>
+				<div class="skill-card">
+					<svg class="SVG">
+						<use href="#SW" />
+					</svg>
+					<span class="skill-label">SolidWorks</span>
+				</div>
+				<div class="skill-card">
+					<img class="skill-img" src="img/Altium.png" alt="Altium Designer">
+					<span class="skill-label">Altium Designer</span>
+				</div>
 			</div>
 		</section>
 
 		<section class="main-feature">
 			<div class="features">
-				<svg class="SVG_2">
-					<use xlink:href="#C" />
-				</svg>
-				<svg class="SVG_2">
-					<use xlink:href="#C++" />
-				</svg>
-				<svg class="SVG_2">
-					<use xlink:href="#HTML5" />
-				</svg>
-				<svg class="SVG_2">
-					<use xlink:href="#CSS3" />
-				</svg>
+				<div class="skill-card">
+					<svg class="SVG">
+						<use xlink:href="#C" />
+					</svg>
+					<span class="skill-label">C</span>
+				</div>
+				<div class="skill-card">
+					<svg class="SVG">
+						<use xlink:href="#C++" />
+					</svg>
+					<span class="skill-label">C++</span>
+				</div>
+				<div class="skill-card">
+					<svg class="SVG">
+						<use xlink:href="#HTML5" />
+					</svg>
+					<span class="skill-label">HTML5</span>
+				</div>
+				<div class="skill-card">
+					<svg class="SVG">
+						<use xlink:href="#CSS3" />
+					</svg>
+					<span class="skill-label">CSS3</span>
+				</div>
 			</div>
 
-			<div class="feature-description">Software Development
+			<div class="feature-description">
+				<h3 class="feature-title">Software Development</h3>
 				<ul>
 					<li>C/C++;</li>
 					<li>Windows user-space application development;</li>
@@ -103,26 +138,69 @@
 			<h1 class="post-description">After all, I'm interested in creating new things</h1>
 
 			<article class="post">
-				<h1>Bio-Inspired Vision System</h1>
-				<time>02 november 2023</time>
+				<div class="post-card">
+					<img class="post-preview" src="img/BICE/3D model 2.png" alt="Bio-Inspired Vision System 3D model"
+						loading="lazy">
+					<div class="post-info">
+						<h1>Bio-Inspired Vision System</h1>
+						<time datetime="2023-11-02">Nov 2023</time>
+						<p class="post-summary">Multi-channel faceted vision system inspired by insect compound eyes:
+							1000+ angular velocity measurements per second for GPS-free navigation of drones and
+							robots.</p>
+						<div class="post-tags">
+							<span>Optics</span><span>Embedded</span><span>C/C++</span><span>Computer Vision</span>
+						</div>
+					</div>
+				</div>
 				<button class="btn-show">More</button>
 			</article>
 
 			<article class="post">
-				<h1>IR Scanning System</h1>
-				<time>12 july 2017</time>
+				<div class="post-card">
+					<img class="post-preview" src="img/IR Scanning System/IMG_0249.jpeg" alt="IR Scanning System prototype"
+						loading="lazy">
+					<div class="post-info">
+						<h1>IR Scanning System</h1>
+						<time datetime="2017-07-12">Jul 2017</time>
+						<p class="post-summary">Mechanically scanned thermal imager: spherical mirror, single-element IR
+							detector and ATmega16 control with real-time visualization on a PC.</p>
+						<div class="post-tags">
+							<span>ATmega16</span><span>C</span><span>Optics</span><span>UART</span>
+						</div>
+					</div>
+				</div>
 				<button class="btn-show">More</button>
 			</article>
 
 			<article class="post">
-				<h1>Ping Pong</h1>
-				<time>03 august 2016</time>
+				<div class="post-card">
+					<div class="post-info">
+						<h1>Ping Pong</h1>
+						<time datetime="2016-08-03">Aug 2016</time>
+						<p class="post-summary">Classic canvas game with an AI opponent, mouse, touch and keyboard
+							controls — playable right on this page.</p>
+						<div class="post-tags">
+							<span>JavaScript</span><span>Canvas</span><span>Game</span>
+						</div>
+					</div>
+				</div>
 				<button class="btn-show">More</button>
 			</article>
 
 			<article class="post">
-				<h1>Economical readout unit</h1>
-				<time>15 december 2015</time>
+				<div class="post-card">
+					<img class="post-preview" src="img/Economical Readout Unit/projectX.jpg"
+						alt="Economical readout unit board" loading="lazy">
+					<div class="post-info">
+						<h1>Economical readout unit</h1>
+						<time datetime="2015-12-15">Dec 2015</time>
+						<p class="post-summary">4-channel ADC readout board on ATmega16 streaming sensor data to a PC
+							over UART with live plotting.</p>
+						<div class="post-tags">
+							<span>ATmega16</span><span>ADC</span><span>UART</span><span>Delphi</span>
+						</div>
+					</div>
+				</div>
 				<button class="btn-show">More</button>
 			</article>
 		</section>
@@ -132,15 +210,9 @@
 
 	<footer class="page-footer" id="contact">
 		<div class="contact-links">
-			<a href="https://www.instagram.com/taikata1vi/" title="Instagram" target="_blank">
+			<a href="https://github.com/taikatalvi" title="GitHub" target="_blank">
 				<svg class="link">
-					<use href="#instagram" />
-				</svg>
-			</a>
-			<a href="https://ru-ru.facebook.com/people/Vitalik-Antonenko/100006145393135" title="Facebook"
-				target="_blank">
-				<svg class="link">
-					<use href="#facebook" />
+					<use href="#github" />
 				</svg>
 			</a>
 			<a href="https://www.linkedin.com/in/vitalii-antonenko-901257103/" title="LinkedIn" target="_blank">
@@ -153,6 +225,17 @@
 					<use href="#email" />
 				</svg>
 			</a>
+			<a href="https://www.instagram.com/taikata1vi/" title="Instagram" target="_blank">
+				<svg class="link">
+					<use href="#instagram" />
+				</svg>
+			</a>
+			<a href="https://ru-ru.facebook.com/people/Vitalik-Antonenko/100006145393135" title="Facebook"
+				target="_blank">
+				<svg class="link">
+					<use href="#facebook" />
+				</svg>
+			</a>
 		</div>
 
 		<a href="#header" title="Up">
@@ -160,6 +243,8 @@
 				<use href="#Arrow" />
 			</svg>
 		</a>
+
+		<div class="text-footer">&copy; 2026 Vitalii Antonenko</div>
 	</footer>
 
 	<!-- Script -->
@@ -395,6 +480,10 @@
 			<path id="Shape_6_" fill="#FFFFFF"
 				d="M500.3,335.1v55.1v33.4v0.2H286.4h-0.3l-1.8-19.9l-4-45l-2.1-23.8L500.3,335.1L500.3,335.1z" />
 			<path id="Shape_7_" fill="#FFFFFF" d="M500,514.6v55.1v33.4v0.2h-97.2h-0.3l-1.8-19.9l-4-45l-2.1-23.8H500z" />
+		</symbol>
+		<symbol id="github" viewBox="0 0 16 16">
+			<path
+				d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z" />
 		</symbol>
 		<symbol id="facebook" viewBox="0 0 512 512">
 			<path

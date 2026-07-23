@@ -3,46 +3,26 @@
 
 
 ::-webkit-scrollbar {
-  width: 0px;
-  /* Completely hidden by default */
-  transition: width 0.3s ease;
+  width: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(207, 190, 102, 0.7);
-  /* More visible #CFBE66 background for track */
-  border-radius: 3px;
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(207, 190, 102, 0.6);
-  /* #CFBE66 with transparency */
+  background: rgba(159, 138, 51, 0.55);
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
   background: #CFBE66;
-  /* Full opacity #CFBE66 on hover */
-}
-
-/* Show scrollbar only when hovering over the page */
-html:hover::-webkit-scrollbar {
-  width: 3px;
 }
 
 /* Firefox support */
 html {
-  scrollbar-width: none;
-  /* Hide scrollbar in Firefox */
-}
-
-html:hover {
   scrollbar-width: thin;
-  /* Show thin scrollbar on hover in Firefox */
-}
-
-html:hover::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.1);
+  scrollbar-color: rgba(159, 138, 51, 0.55) transparent;
 }
 
 @keyframes bounce {
@@ -132,6 +112,7 @@ body {
   padding: 0;
   font-family: Cambria, "Hoefler Text", "Liberation Serif", Times, "Times New Roman", serif;
   color: white;
+  overflow-x: hidden;
   transition: opacity 1.5s ease;
 }
 
@@ -140,13 +121,23 @@ body a {
 }
 
 .page-header {
+  position: sticky;
+  top: 0;
+  z-index: 500;
   min-height: 80px;
-  background-color: #222;
+  background-color: rgba(34, 34, 34, 0.92);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
   padding-top: 1%;
+}
+
+.page-header h1 {
+  margin: 6px 0 0;
 }
 
 .header-logo {
@@ -189,7 +180,7 @@ body a {
   color: white;
   text-decoration: none;
   transition: color 0.5s ease;
-  font-family: "Droid Serif", Cambria, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Source Serif 4", Cambria, "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 12pt;
   text-decoration: none;
   text-transform: uppercase;
@@ -207,7 +198,7 @@ body a {
   position: absolute;
   width: 0;
   height: 2px;
-  background: #f00;
+  background: #CFBE66;
   opacity: .8;
   transition: all 0.3s;
 }
@@ -225,8 +216,14 @@ body a {
 }
 
 .header-nav a:hover::after,
-.header-nav a:hover::before {
+.header-nav a:hover::before,
+.header-nav a.active::after,
+.header-nav a.active::before {
   width: 50%;
+}
+
+.header-nav a.active {
+  color: #CFBE66;
 }
 
 
@@ -252,7 +249,7 @@ body a {
 .intro-img {
   width: 256px;
   height: 256px;
-  border: 4px solid #aaa;
+  border: 4px solid #9F8A33;
   border-radius: 100%;
   margin-bottom: 10px;
   background-image: url(../img/Me_1.jpg);
@@ -263,23 +260,87 @@ body a {
 }
 
 .intro-img:hover {
-  border-color: #9F8A33;
+  border-color: #CFBE66;
   transition: border-color ease-in-out 1s;
 }
 
 .intro-description {
   position: relative;
   display: inline-block;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  width: auto;
+  padding: 20px 10px;
   max-width: 100%;
-  font-family: "Droid Serif", Cambria, "Helvetica Neue", Helvetica, Arial, sans-serif;
-  /* Scale the font down on narrow screens so nowrap lines never overflow */
-  font-size: clamp(14px, 4.4vw, 30px);
+  font-family: "Source Serif 4", Cambria, "Helvetica Neue", Helvetica, Arial, sans-serif;
   color: #CFBE66;
   text-align: center;
-  line-height: 1.35;
+}
+
+.intro-greeting {
+  margin: 0 0 6px;
+  font-size: clamp(15px, 2vw, 19px);
+  color: #d5d5d5;
+  letter-spacing: 1.5px;
+}
+
+.intro-name {
+  margin: 0 0 10px;
+  font-family: "Playfair Display", "Source Serif 4", Cambria, serif;
+  font-weight: 600;
+  font-size: clamp(26px, 4.6vw, 50px);
+  line-height: 1.15;
+  color: #CFBE66;
+  white-space: nowrap;
+}
+
+.intro-role {
+  margin: 0 0 26px;
+  font-size: clamp(13px, 1.8vw, 18px);
+  color: #aaa;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  white-space: nowrap;
+}
+
+.intro-actions {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.btn-primary,
+.btn-outline {
+  display: inline-block;
+  padding: 12px 28px;
+  border-radius: 6px;
+  font-family: "Source Serif 4", Cambria, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 15px;
+  letter-spacing: 1px;
+  transition: all .3s ease;
+}
+
+.btn-primary {
+  background-color: #9F8A33;
+  border: 1px solid #9F8A33;
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background-color: #CFBE66;
+  border-color: #CFBE66;
+  color: #222;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(159, 138, 51, 0.35);
+}
+
+.btn-outline {
+  background-color: transparent;
+  border: 1px solid #9F8A33;
+  color: #CFBE66;
+}
+
+.btn-outline:hover {
+  background-color: rgba(159, 138, 51, 0.15);
+  transform: translateY(-2px);
 }
 
 /* Keep phrases like the full name on a single line */
@@ -327,13 +388,22 @@ body a {
 
 .feature-description {
   width: 500px;
-  font-family: "Droid Serif", Cambria, "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 20px;
-  color: #CFBE66;
+  font-family: "Source Serif 4", Cambria, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 18px;
+  color: #d5d5d5;
   text-align: left;
-  line-height: 40px;
+  line-height: 1.9;
   padding: 10px;
   transition: color 2s ease;
+}
+
+.feature-title {
+  margin: 0 0 12px;
+  font-family: "Playfair Display", "Source Serif 4", Cambria, serif;
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 1.35;
+  color: #CFBE66;
 }
 
 .features {
@@ -344,37 +414,41 @@ body a {
   justify-content: center;
 }
 
-.SVG {
+.skill-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   width: 200px;
-  height: 200px;
+  padding: 18px 10px 14px;
+  margin: 3%;
   border-radius: 15px;
   background-color: white;
-  margin: 4%;
+  transition: transform .3s ease, box-shadow .3s ease;
 }
 
-.SVG:nth-child(4) {
-  background-image: url("../img/Altium.png");
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: 165px 87px;
+.skill-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.45);
 }
 
-.SVG:hover {
-  animation: bounce 1s;
-  transform-origin: center bottom;
+.SVG {
+  width: 150px;
+  height: 150px;
 }
 
-
-
-.SVG_2 {
-  width: 190px;
-  height: 190px;
-  margin: 4%;
+.skill-img {
+  width: 150px;
+  height: 150px;
+  object-fit: contain;
 }
 
-.SVG_2:hover {
-  animation: bounce 1s;
-  transform-origin: center bottom;
+.skill-label {
+  margin-top: 10px;
+  font-family: "Source Serif 4", Cambria, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 15px;
+  letter-spacing: 1px;
+  color: #444;
 }
 
 .main-post {
@@ -392,7 +466,7 @@ body a {
   width: 100%;
   padding-top: 10px;
   padding-bottom: 10px;
-  font-family: "Droid Serif", Cambria, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Source Serif 4", Cambria, "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 30px;
   color: #aaa;
   text-align: center;
@@ -427,17 +501,68 @@ body a {
 }
 
 
-.post>h1 {
-  text-align: center;
-  margin: 0;
-  margin-bottom: 15px;
-  font-size: 24pt;
+.post>h1,
+.post-info h1 {
+  text-align: left;
+  margin: 0 0 6px;
+  font-family: "Playfair Display", "Source Serif 4", Cambria, serif;
+  font-weight: 500;
+  font-size: 22pt;
 }
 
-.post>time {
+.post-info time {
+  display: block;
+  font-size: 12pt;
+  color: #999;
+  margin-bottom: 12px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.post-card {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  flex-wrap: wrap;
+  padding: 0 24px;
+}
+
+.post-preview {
+  width: 260px;
+  height: 175px;
+  object-fit: cover;
+  border-radius: 10px;
+  flex-shrink: 0;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+}
+
+.post-info {
+  flex: 1;
+  min-width: 260px;
+  text-align: left;
+}
+
+.post-summary {
+  margin: 0 0 14px;
+  font-family: "Source Serif 4", Cambria, "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 14pt;
-  color: #ccc;
-  margin-bottom: 0px;
+  line-height: 1.6;
+  color: #d5d5d5;
+}
+
+.post-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.post-tags span {
+  padding: 4px 12px;
+  border: 1px solid #9F8A33;
+  border-radius: 20px;
+  font-family: "Source Serif 4", Cambria, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 11pt;
+  color: #CFBE66;
 }
 
 .article {
@@ -724,7 +849,7 @@ body a {
 
 
 .btn-show {
-  font-family: "Droid Serif", Cambria, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Source Serif 4", Cambria, "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 16pt;
   border: 1px solid #9F8A33;
   color: #fff;
@@ -772,7 +897,8 @@ body a {
   align-items: center;
   flex-direction: row;
   justify-content: space-around;
-  width: 300px;
+  width: 360px;
+  max-width: 95%;
   padding: 10px;
   margin-bottom: 10px;
 }
@@ -792,11 +918,11 @@ body a {
     transform .6s ease;
   -webkit-transform: scale(1.2);
   transform: scale(1.2);
-  fill: rgba(48, 231, 185, 0.8);
+  fill: #CFBE66;
 }
 
 .contact-links a:active svg {
-  fill: rgba(48, 231, 185, 0.5);
+  fill: #9F8A33;
 }
 
 .arrow-up {
@@ -813,7 +939,7 @@ body a {
 
 .text-footer {
   text-transform: capitalize;
-  font-family: "Droid Serif", Cambria, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Source Serif 4", Cambria, "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 13pt;
   font-weight: 300;
   color: #d3d3d3;

@@ -42,12 +42,49 @@ function FindAnchorLinks()
 
 function ScrollTo(element) 
 {
+    // Account for the sticky header height so sections are not hidden behind it
+    const header = document.querySelector('.page-header');
+    const offset = header ? header.offsetHeight : 0;
+
     window.scrollTo(
     {
         'behavior': 'smooth',
         'left': 0,
-        'top': element.offsetTop
+        'top': element.offsetTop - offset
     });
+}
+
+// Highlight the nav link of the section currently in view
+function SetupActiveSectionHighlight()
+{
+    const nav_links = document.querySelectorAll('.header-nav a');
+    const sections = [];
+
+    nav_links.forEach(link =>
+    {
+        const section = document.querySelector(link.getAttribute('href'));
+
+        if (section)
+            sections.push({ link: link, section: section });
+    });
+
+    function updateActive()
+    {
+        // A section is "current" when its top passes the upper third of the viewport
+        const probe = window.innerHeight * 0.35;
+        let current = null;
+
+        sections.forEach(item =>
+        {
+            if (item.section.getBoundingClientRect().top <= probe)
+                current = item;
+        });
+
+        sections.forEach(item => item.link.classList.toggle('active', item === current));
+    }
+
+    document.addEventListener('scroll', updateActive, { passive: true });
+    updateActive();
 }
 
 // Fetch a post file and return its text content
@@ -111,6 +148,8 @@ function Main()
 
 
     let anchor_links = FindAnchorLinks();
+
+    SetupActiveSectionHighlight();
 
     for (let i = 0; i < anchor_links.length; i++) 
     {
