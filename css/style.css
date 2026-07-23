@@ -555,6 +555,7 @@ body a {
 .post-tags {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: 8px;
 }
 
@@ -567,9 +568,10 @@ body a {
   color: #CFBE66;
 }
 
+/* Store link sits to the right of the tags in the same row */
 .post-store-link {
-  display: inline-block;
-  margin-top: 14px;
+  margin-left: auto;
+  padding-left: 12px;
   font-family: "Source Serif 4", Cambria, "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 12pt;
   color: #CFBE66;
