@@ -127,7 +127,7 @@
             <ul>
                 <li><strong>Mouse:</strong> Move your paddle left and right</li>
                 <li><strong>Touch:</strong> Swipe on mobile devices</li>
-                <li><strong>Keyboard:</strong> Use arrow keys for navigation</li>
+                <li><strong>Keyboard:</strong> Use arrow keys or A/D to move the paddle</li>
             </ul>
         </div>
         
@@ -289,12 +289,12 @@
             }
 
             
-            document.addEventListener('keydown', function()
+            document.addEventListener('keydown', function(e)
             {
-                if(event.keyCode == 68)
-                    player.x += player.speed_x;
-                if(event.keyCode == 65)
-                    player.x -= player.speed_x;
+                if(e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D')
+                    player.targetX = Math.min(player.x + player.speed_x, canvas.width - player.width);
+                if(e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A')
+                    player.targetX = Math.max(player.x - player.speed_x, 0);
             });
 
             canvas.addEventListener("click", function()

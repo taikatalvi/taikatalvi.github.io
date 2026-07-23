@@ -108,7 +108,11 @@ class ImageSlider
     setupEventListeners() 
     {
         if (this.options.keyboardEnabled) 
-            document.addEventListener('keydown', this.handleKeyDown.bind(this));
+        {
+            // Keep a reference to the bound handler so it can be removed later
+            this.boundKeyDownHandler = this.handleKeyDown.bind(this);
+            document.addEventListener('keydown', this.boundKeyDownHandler);
+        }
         
         if (this.options.touchEnabled)
             this.setupTouchEvents();
@@ -457,8 +461,8 @@ class ImageSlider
     {
         this.pauseAutoPlay();
         
-        if (this.options.keyboardEnabled)
-            document.removeEventListener('keydown', this.handleKeyDown.bind(this));
+        if (this.boundKeyDownHandler)
+            document.removeEventListener('keydown', this.boundKeyDownHandler);
         
         if (this.modalKeyHandler)
             document.removeEventListener('keydown', this.modalKeyHandler);
@@ -480,8 +484,8 @@ document.addEventListener('DOMContentLoaded', function()
     sliders.forEach(slider => 
     {
         const containerId = slider.id;
-        if (containerId)
-            new ImageSlider(containerId);
+        if (containerId && !slider.sliderInstance)
+            slider.sliderInstance = new ImageSlider(containerId);
     });
 });
 

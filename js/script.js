@@ -1,5 +1,4 @@
-﻿
-'use strict';
+﻿'use strict';
 
 
 function isOnDisplay(obj)
@@ -12,29 +11,32 @@ function isOnDisplay(obj)
         return false;
 }
 
-function Foo(obj, cls) // Adding class to element that is on display
+// Add a class to the element once it becomes visible in the viewport
+function RevealOnDisplay(id, cls)
 {
-    let a = document.getElementById(obj);
+    let element = document.getElementById(id);
 
-    if(isOnDisplay(a))
-        a.classList.add(cls);
+    if(isOnDisplay(element))
+        element.classList.add(cls);
 }
 
 
-function FindLocalLinks()
+// Collect all in-page anchor links (href starting with '#')
+function FindAnchorLinks()
 {
-    let local_links = [];
+    let anchor_links = [];
 
     let links = document.getElementsByTagName('a');
-    // Local Links have a href length less than 10 characters
-    let str_length = 10;
 
-    // In each link we are looking a local one
-    for (let i = 0; i < links.length; i++) 
-        if(links[i].getAttribute('href').length < str_length)
-            local_links.push(links[i]);
-    
-    return local_links; // And return all local links
+    for (let i = 0; i < links.length; i++)
+    {
+        let href = links[i].getAttribute('href');
+
+        if(href && href.startsWith('#'))
+            anchor_links.push(links[i]);
+    }
+
+    return anchor_links;
 }
 
 
@@ -48,37 +50,71 @@ function ScrollTo(element)
     });
 }
 
-function PushXMLRequest(method, filename, mode)
+// Fetch a post file and return its text content
+async function LoadPost(filename)
 {
-    let xhr = new XMLHttpRequest();
-            
-    xhr.open(method, filename, mode);
-    xhr.send();
-            
-    if (xhr.status != 200)
-        alert('Error: ' + xhr.status + ': ' + xhr.statusText);
-    else 
-        return xhr.responseText;
+    const response = await fetch(filename);
+
+    if (!response.ok)
+        throw new Error('Error: ' + response.status + ': ' + response.statusText);
+
+    return response.text();
+}
+
+// Parse a full post HTML document and inject it into the target div.
+// Post-specific styles are moved to <head> once per post to avoid duplicates.
+function InjectPostContent(div, html, postName)
+{
+    const doc = new DOMParser().parseFromString(html, 'text/html');
+
+    // Move post styles into the document head (only once per post)
+    const styleMarker = 'post-style-' + postName;
+
+    if (document.querySelector(`style[data-post="${styleMarker}"]`) === null)
+    {
+        doc.querySelectorAll('head style').forEach(style =>
+        {
+            const el = document.createElement('style');
+            el.dataset.post = styleMarker;
+            el.textContent = style.textContent;
+            document.head.appendChild(el);
+        });
+    }
+
+    div.innerHTML = doc.body.innerHTML;
+}
+
+// Initialize image sliders inside the given root element.
+// Instances are stored on the slider element so they are created only once.
+function InitSliders(root)
+{
+    const sliders = root.querySelectorAll('.image-slider');
+
+    sliders.forEach(slider =>
+    {
+        if (slider.id && typeof ImageSlider !== 'undefined' && !slider.sliderInstance)
+            slider.sliderInstance = new ImageSlider(slider.id);
+    });
 }
 
 function Main()
 {
     document.addEventListener('wheel', function()
     {
-        Foo('intro', 'intro-des2');
+        RevealOnDisplay('intro', 'intro-des2');
     });
 
     window.onload = function()
     {
-        Foo('intro', 'intro-des2');
+        RevealOnDisplay('intro', 'intro-des2');
     };
 
 
-    let local_links = FindLocalLinks();
+    let anchor_links = FindAnchorLinks();
 
-    for (let i = 0; i < local_links.length; i++) 
+    for (let i = 0; i < anchor_links.length; i++) 
     {
-        local_links[i].addEventListener("click", 
+        anchor_links[i].addEventListener("click", 
         function(event)
         {
             event.preventDefault();
@@ -100,7 +136,7 @@ function Main()
 
     for (let i = 0; i < buttons.length; i++) 
     {
-        buttons[i].addEventListener('click', function(event)
+        buttons[i].addEventListener('click', async function(event)
         {
             event.preventDefault();
 
@@ -123,22 +159,29 @@ function Main()
                     article.insertBefore(div, button);
 
                     // Load content
-                    div.innerHTML = PushXMLRequest('GET', '../posts/' + 
-                                    article.querySelector('h1').innerHTML + '.html', false);
+                    const postName = article.querySelector('h1').innerHTML;
+
+                    try
+                    {
+                        const html = await LoadPost('posts/' + postName + '.html');
+                        InjectPostContent(div, html, postName);
+                    }
+                    catch (error)
+                    {
+                        div.remove();
+                        button.classList.remove('loading');
+                        button.innerHTML = 'More';
+                        article.classList.remove('expanding');
+                        alert(error.message);
+                        return;
+                    }
 
                     // Animate content appearance
                     setTimeout(() => {
                         div.classList.add('show');
                         
                         // Initialize image sliders if they exist in the loaded content
-                        const sliders = div.querySelectorAll('.image-slider');
-                        sliders.forEach(slider => 
-                        {
-                            const containerId = slider.id;
-
-                            if (containerId && typeof ImageSlider !== 'undefined') 
-                                new ImageSlider(containerId);
-                        });
+                        InitSliders(div);
 
                         // Execute any scripts in the loaded content
                         if (div.querySelector('script') !== null) 
@@ -166,22 +209,7 @@ function Main()
                     existingDiv.classList.remove('hide');
                     existingDiv.classList.add('show');
                     
-                    // Re-initialize image sliders when reopening post
-                    const sliders = existingDiv.querySelectorAll('.image-slider');
-                    sliders.forEach(slider => 
-                    {
-                        const containerId = slider.id;
-                        if (containerId && typeof ImageSlider !== 'undefined') 
-                        {
-                            // Remove existing indicators first
-                            const existingIndicators = document.querySelector(`.indicators-${containerId}`);
-                            
-                            if (existingIndicators)
-                                existingIndicators.remove();
-                            
-                            new ImageSlider(containerId);
-                        }
-                    });
+                    // Sliders keep their instances; nothing to re-initialize here
                     
                     // Update button state
                     setTimeout(() => 
@@ -201,18 +229,6 @@ function Main()
                 if (existingDiv) {
                     existingDiv.classList.remove('show');
                     existingDiv.classList.add('hide');
-                    
-                    // Remove slider indicators when closing post
-                    const sliders = existingDiv.querySelectorAll('.image-slider');
-                    sliders.forEach(slider => {
-                        const containerId = slider.id;
-                        if (containerId) {
-                            const indicators = document.querySelector(`.indicators-${containerId}`);
-                            if (indicators) {
-                                indicators.remove();
-                            }
-                        }
-                    });
                 }
                 
                 // Update button after animation

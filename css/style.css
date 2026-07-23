@@ -272,12 +272,19 @@ body a {
   display: inline-block;
   padding-top: 10px;
   padding-bottom: 10px;
-  width: 500px;
+  width: auto;
+  max-width: 100%;
   font-family: "Droid Serif", Cambria, "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 30px;
+  /* Scale the font down on narrow screens so nowrap lines never overflow */
+  font-size: clamp(14px, 4.4vw, 30px);
   color: #CFBE66;
   text-align: center;
-  line-height: 40px;
+  line-height: 1.35;
+}
+
+/* Keep phrases like the full name on a single line */
+.nowrap {
+  white-space: nowrap;
 }
 
 .intro-description::before,
