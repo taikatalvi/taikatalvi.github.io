@@ -530,7 +530,9 @@ body a {
 .post-preview {
   width: 260px;
   height: 175px;
-  object-fit: cover;
+  /* Show the whole image without cropping */
+  object-fit: contain;
+  background-color: #1a1a1a;
   border-radius: 10px;
   flex-shrink: 0;
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
