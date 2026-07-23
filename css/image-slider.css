@@ -1,8 +1,9 @@
 /* Image Slider Styles */
 .image-slider {
     position: relative;
-    width: 600px;
-    height: 400px;
+    /* Fluid width so sliders never overflow small screens */
+    width: min(600px, 92vw);
+    aspect-ratio: 3 / 2;
     margin: 30px auto;
     overflow: hidden;
     border-radius: 8px;
@@ -10,6 +11,12 @@
     background: #000;
     transition: all 0.3s ease-in-out;
     transform: scale(1);
+}
+
+/* Tall variant for phone screenshots */
+.image-slider--portrait {
+    width: min(300px, 65vw);
+    aspect-ratio: 6 / 13;
 }
 
 .image-slider img {
@@ -145,31 +152,12 @@
 
 /* Responsive design */
 @media screen and (max-width: 768px) {
-    .image-slider {
-        width: 500px;
-        height: 333px;
-    }
-    
     .slider-nav {
-        width: 500px;
+        width: min(500px, 92vw);
     }
 }
 
 @media screen and (max-width: 640px) {
-    .image-slider {
-        width: 300px !important;
-        height: 200px !important;
-    }
-    
-    .image-slider img {
-        width: 300px !important;
-        height: 200px !important;
-    }
-    
-    .slider-nav {
-        width: 300px !important;
-    }
-    
     .slider-btn {
         width: 35px;
         height: 35px;
@@ -179,17 +167,6 @@
     .indicator {
         width: 10px;
         height: 10px;
-    }
-}
-
-@media screen and (max-width: 480px) {
-    .image-slider {
-        width: 280px !important;
-        height: 187px !important;
-    }
-    
-    .slider-nav {
-        width: 280px !important;
     }
 }
 

@@ -5,66 +5,6 @@
     <meta charset="UTF-8">
     <title>Economical readout unit</title>
     <style>
-        @media screen and (max-width: 640px) 
-        {
-            .image-slider 
-            {
-                width: 300px !important;
-                height: 213px !important;
-            }
-
-            .image-slider img 
-            {
-                width: 300px !important;
-                height: 213px !important;
-            }
-        }
-
-        .image-slider 
-        {
-            position: relative;
-            width: 600px;
-            height: 400px;
-            margin: 30px auto;
-            overflow: hidden;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-            background: #000;
-            transition: all 0.3s ease-in-out;
-            transform: scale(1);
-        }
-
-        .image-slider img 
-        {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            opacity: 0;
-            transition: all 0.3s ease-in-out;
-            background: #000;
-        }
-
-        .image-slider img.active 
-        {
-            opacity: 1;
-        }
-
-        /* Hover effect on the entire slider container */
-        .image-slider:hover 
-        {
-            transform: scale(1.05) !important;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6) !important;
-            z-index: 100 !important;
-        }
-
-        /* Remove individual image hover effects */
-        .image-slider img.active:hover 
-        {
-            transform: none !important;
-            background-color: transparent !important;
-        }
-
         body 
         {
             background-color: #222;

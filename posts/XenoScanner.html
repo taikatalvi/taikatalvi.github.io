@@ -32,43 +32,6 @@
             color: #9F8A33;
         }
 
-        .image-slider 
-        {
-            position: relative;
-            width: 300px;
-            height: 620px;
-            margin: 30px auto;
-            overflow: hidden;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-            background: #000;
-            transition: all 0.3s ease-in-out;
-            transform: scale(1);
-        }
-
-        .image-slider img 
-        {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            opacity: 0;
-            transition: all 0.3s ease-in-out;
-            background: #000;
-        }
-
-        .image-slider img.active 
-        {
-            opacity: 1;
-        }
-
-        .image-slider:hover 
-        {
-            transform: scale(1.05) !important;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6) !important;
-            z-index: 100 !important;
-        }
-
         @media screen and (max-width: 640px) 
         {
             .container 
@@ -81,19 +44,13 @@
                 font-size: 16px;
                 line-height: 1.4;
             }
-
-            .image-slider 
-            {
-                width: 220px !important;
-                height: 455px !important;
-            }
         }
     </style>
 </head>
 
 <body>
     <div class="container">
-        <div class="image-slider" id="xenoSlider">
+        <div class="image-slider image-slider--portrait" id="xenoSlider">
             <img src="../img/XenoScanner/screenshot_1.jpg" alt="XenoScanner main menu" class="active">
             <img src="../img/XenoScanner/screenshot_2.jpg" alt="Motion Tracker radar">
             <img src="../img/XenoScanner/screenshot_3.jpg" alt="Structure Scan wireframe">
