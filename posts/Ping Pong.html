@@ -11,10 +11,11 @@
             aspect-ratio: 1 / 1;
             margin: 30px auto 0;
             border-radius: 8px;
-            border: 1px solid rgba(89, 255, 126, 0.25);
-            background: #020a04;
+            border: 1px solid rgba(66, 220, 255, 0.35);
+            background: #07071c;
             box-shadow:
-                0 0 25px rgba(89, 255, 126, 0.12),
+                0 0 22px rgba(66, 220, 255, 0.18),
+                0 0 45px rgba(255, 64, 214, 0.10),
                 inset 0 0 60px rgba(0, 0, 0, 0.8);
             cursor: pointer;
             touch-action: none;
@@ -29,8 +30,8 @@
             width: 80%;
             display: block;
             margin: 12px auto;
-            color: #59ff7e;
-            text-shadow: 0 0 8px rgba(89, 255, 126, 0.6);
+            color: #42dcff;
+            text-shadow: 0 0 8px rgba(66, 220, 255, 0.6);
             min-height: 24px;
             line-height: 1.2;
         }
@@ -113,7 +114,7 @@
     <article>
         <div class="game-description">
             <h3>Game Description</h3>
-            <p>A classic Ping Pong game built with HTML5 Canvas and JavaScript, styled as a retro phosphor CRT display. Control your paddle to play against the AI and try to score more points!</p>
+            <p>A classic Ping Pong game built with HTML5 Canvas and JavaScript, reimagined as a neon arcade cabinet. Control your paddle to play against the AI and try to score more points!</p>
         </div>
 
         <div class="game-controls">
@@ -132,7 +133,7 @@
         <div class="game-description">
             <h3>Features</h3>
             <ul>
-                <li>Retro CRT look: phosphor glow, scanlines and a ball trail</li>
+                <li>Neon arcade look: synthwave grid, glow and a ball trail</li>
                 <li>Bounce angle depends on where the ball hits the paddle</li>
                 <li>The ball speeds up with every paddle hit</li>
                 <li>AI opponent with human-like reaction</li>
@@ -162,10 +163,13 @@
         const W = canvas.width;
         const H = canvas.height;
 
-        // Phosphor green palette
-        const COLOR_MAIN = '#59ff7e';
-        const COLOR_DIM  = 'rgba(89, 255, 126, 0.35)';
-        const COLOR_WARN = '#ffb347';
+        // Neon arcade palette: cyan player, magenta AI, white ball
+        const COLOR_PLAYER = '#42dcff';
+        const COLOR_AI     = '#ff40d6';
+        const COLOR_BALL   = '#ffffff';
+        const COLOR_GRID   = 'rgba(66, 220, 255, 0.10)';
+        const COLOR_NET    = 'rgba(255, 255, 255, 0.25)';
+        const COLOR_WARN   = '#ff5c5c';
 
         const WIN_SCORE     = 5;
         const PADDLE_W      = 90;
@@ -326,24 +330,42 @@
             stateTimer = state === 'over' ? 3 : 1.5;
         }
 
-        function drawScanlines()
+        function drawGrid()
         {
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.18)';
-            for (let y = 0; y < H; y += 4)
-                ctx.fillRect(0, y, W, 2);
+            // Synthwave-style square grid
+            ctx.strokeStyle = COLOR_GRID;
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+
+            for (let x = 0; x <= W; x += 50)
+            {
+                ctx.moveTo(x + 0.5, 0);
+                ctx.lineTo(x + 0.5, H);
+            }
+
+            for (let y = 0; y <= H; y += 50)
+            {
+                ctx.moveTo(0, y + 0.5);
+                ctx.lineTo(W, y + 0.5);
+            }
+
+            ctx.stroke();
         }
 
         function draw()
         {
-            // Background with a subtle green vignette
-            const grad = ctx.createRadialGradient(W / 2, H / 2, 60, W / 2, H / 2, W * 0.75);
-            grad.addColorStop(0, '#04180a');
-            grad.addColorStop(1, '#020a04');
+            // Deep night background with a purple horizon glow in the middle
+            const grad = ctx.createLinearGradient(0, 0, 0, H);
+            grad.addColorStop(0,    '#0d0724');
+            grad.addColorStop(0.5,  '#1b0f3a');
+            grad.addColorStop(1,    '#0d0724');
             ctx.fillStyle = grad;
             ctx.fillRect(0, 0, W, H);
 
+            drawGrid();
+
             // Center dashed line
-            ctx.strokeStyle = COLOR_DIM;
+            ctx.strokeStyle = COLOR_NET;
             ctx.lineWidth = 2;
             ctx.setLineDash([10, 12]);
             ctx.beginPath();
@@ -352,30 +374,38 @@
             ctx.stroke();
             ctx.setLineDash([]);
 
-            // Scores
-            ctx.fillStyle = COLOR_DIM;
+            // Scores tinted by side
             ctx.font = 'bold 52px "Courier New", monospace';
             ctx.textAlign = 'center';
+            ctx.fillStyle = 'rgba(255, 64, 214, 0.45)';
             ctx.fillText(ai.score, W / 2, H / 2 - 30);
+            ctx.fillStyle = 'rgba(66, 220, 255, 0.45)';
             ctx.fillText(player.score, W / 2, H / 2 + 66);
 
             // Ball trail
             for (let i = 0; i < ball.trail.length; i++)
             {
                 const t = ball.trail[i];
-                const a = (i + 1) / ball.trail.length * 0.25;
-                ctx.fillStyle = 'rgba(89, 255, 126, ' + a.toFixed(3) + ')';
+                const a = (i + 1) / ball.trail.length * 0.3;
+                ctx.fillStyle = 'rgba(255, 255, 255, ' + a.toFixed(3) + ')';
                 ctx.beginPath();
                 ctx.arc(t.x, t.y, BALL_R * (0.4 + 0.6 * (i / ball.trail.length)), 0, Math.PI * 2);
                 ctx.fill();
             }
 
-            // Paddles and ball with phosphor glow
-            ctx.shadowColor = COLOR_MAIN;
-            ctx.shadowBlur = 16;
-            ctx.fillStyle = COLOR_MAIN;
+            // Paddles and ball with neon glow
+            ctx.shadowColor = COLOR_PLAYER;
+            ctx.shadowBlur = 18;
+            ctx.fillStyle = COLOR_PLAYER;
             ctx.fillRect(player.x, player.y, PADDLE_W, PADDLE_H);
+
+            ctx.shadowColor = COLOR_AI;
+            ctx.fillStyle = COLOR_AI;
             ctx.fillRect(ai.x, ai.y, PADDLE_W, PADDLE_H);
+
+            ctx.shadowColor = COLOR_BALL;
+            ctx.shadowBlur = 14;
+            ctx.fillStyle = COLOR_BALL;
             ctx.beginPath();
             ctx.arc(ball.x, ball.y, BALL_R, 0, Math.PI * 2);
             ctx.fill();
@@ -384,41 +414,44 @@
             // Overlays for special states
             if (state !== 'playing')
             {
-                ctx.fillStyle = 'rgba(2, 10, 4, 0.65)';
+                ctx.fillStyle = 'rgba(7, 7, 28, 0.7)';
                 ctx.fillRect(0, 0, W, H);
 
                 ctx.textAlign = 'center';
 
                 if (state === 'idle')
                 {
-                    ctx.fillStyle = COLOR_MAIN;
+                    ctx.shadowColor = COLOR_PLAYER;
+                    ctx.shadowBlur = 20;
+                    ctx.fillStyle = COLOR_PLAYER;
                     ctx.font = 'bold 34px "Courier New", monospace';
                     ctx.fillText('P O N G', W / 2, H / 2 - 20);
+                    ctx.shadowBlur = 0;
+                    ctx.fillStyle = '#ffffff';
                     ctx.font = '18px "Courier New", monospace';
                     ctx.fillText('CLICK OR TAP TO START', W / 2, H / 2 + 24);
                 }
                 else if (state === 'paused')
                 {
-                    ctx.fillStyle = COLOR_MAIN;
+                    ctx.fillStyle = COLOR_PLAYER;
                     ctx.font = 'bold 30px "Courier New", monospace';
                     ctx.fillText('PAUSED', W / 2, H / 2 - 10);
+                    ctx.fillStyle = '#ffffff';
                     ctx.font = '16px "Courier New", monospace';
                     ctx.fillText('CLICK TO RESUME', W / 2, H / 2 + 28);
                 }
                 else
                 {
                     const isOver = state === 'over';
-                    ctx.fillStyle = isOver && message === 'GAME OVER' ? COLOR_WARN : COLOR_MAIN;
+                    ctx.fillStyle = isOver && message === 'GAME OVER' ? COLOR_WARN : COLOR_PLAYER;
                     ctx.font = 'bold 32px "Courier New", monospace';
                     ctx.fillText(message, W / 2, H / 2 - 10);
                     ctx.font = '16px "Courier New", monospace';
-                    ctx.fillStyle = COLOR_MAIN;
+                    ctx.fillStyle = '#ffffff';
                     const label = isOver ? 'NEW GAME IN ' : 'NEXT ROUND IN ';
                     ctx.fillText(label + Math.ceil(stateTimer) + '...', W / 2, H / 2 + 28);
                 }
             }
-
-            drawScanlines();
         }
 
         function updateStatus()
