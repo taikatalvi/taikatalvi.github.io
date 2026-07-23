@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>XenoScanner</title>
+    <style>
+        body 
+        {
+            background-color: #222;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container 
+        {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 10px;
+        }
+
+        p 
+        {
+            font-size: 18px;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        strong 
+        {
+            color: #9F8A33;
+        }
+
+        .image-slider 
+        {
+            position: relative;
+            width: 300px;
+            height: 620px;
+            margin: 30px auto;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            background: #000;
+            transition: all 0.3s ease-in-out;
+            transform: scale(1);
+        }
+
+        .image-slider img 
+        {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            opacity: 0;
+            transition: all 0.3s ease-in-out;
+            background: #000;
+        }
+
+        .image-slider img.active 
+        {
+            opacity: 1;
+        }
+
+        .image-slider:hover 
+        {
+            transform: scale(1.05) !important;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6) !important;
+            z-index: 100 !important;
+        }
+
+        @media screen and (max-width: 640px) 
+        {
+            .container 
+            {
+                padding: 10px;
+            }
+
+            p 
+            {
+                font-size: 16px;
+                line-height: 1.4;
+            }
+
+            .image-slider 
+            {
+                width: 220px !important;
+                height: 455px !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="image-slider" id="xenoSlider">
+            <img src="../img/XenoScanner/screenshot_1.jpg" alt="XenoScanner main menu" class="active">
+            <img src="../img/XenoScanner/screenshot_2.jpg" alt="Motion Tracker radar">
+            <img src="../img/XenoScanner/screenshot_3.jpg" alt="Structure Scan wireframe">
+        </div>
+
+        <p>XenoScanner is an iOS app published on the <strong>App Store</strong> that turns an iPhone into a
+            retro-futuristic sensor console — a glowing phosphor-green CRT terminal in the aesthetic of classic
+            sci-fi, with two real scanning modes driven by actual sensor data.</p>
+
+        <p><strong>Motion Tracker</strong> is the iconic circular sonar scope with a rotating sweep, range rings and
+            blips. Contacts are not fake: they come from LiDAR depth-map motion detection fused with ARKit body
+            anchors, positioned by direction and distance. A synthesized ping rises in pitch as a contact gets
+            closer, and a world-anchored compass keeps the radar oriented as you turn.</p>
+
+        <p><strong>Structure Scan</strong> draws the live LiDAR mesh of your surroundings as a glowing green
+            wireframe — fresnel edges plus a sweeping scan plane rendered over the camera feed with custom
+            <strong>Metal shaders</strong>, like a starship deck schematic.</p>
+
+        <p>Both modes are unified by a CRT post-process: scanlines, vignette, a rolling refresh band and a
+            procedural boot sequence. On LiDAR-equipped iPhones the scanner fuses depth data with camera motion for
+            accurate contacts; on other devices it falls back to a camera-based motion estimate.</p>
+
+        <p>Everything runs <strong>100% on-device</strong> — no accounts, no network, no analytics, no data
+            collection. Built with Swift, SwiftUI, ARKit and Metal.
+            <a href="https://apps.apple.com/us/app/xenoscanner/id6790196613" target="_blank"
+                rel="noopener"><strong>Get it on the App Store &#8599;</strong></a>
+        </p>
+    </div>
+</body>
+
+</html>

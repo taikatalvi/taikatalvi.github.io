@@ -567,6 +567,21 @@ body a {
   color: #CFBE66;
 }
 
+.post-store-link {
+  display: inline-block;
+  margin-top: 14px;
+  font-family: "Source Serif 4", Cambria, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 12pt;
+  color: #CFBE66;
+  border-bottom: 1px solid #9F8A33;
+  transition: color .3s ease, border-color .3s ease;
+}
+
+.post-store-link:hover {
+  color: #fff;
+  border-color: #CFBE66;
+}
+
 .article {
   display: block;
   margin: 20px auto 20px;
