@@ -123,7 +123,7 @@
                 <li><strong>Mouse:</strong> Move your paddle left and right</li>
                 <li><strong>Touch:</strong> Drag on mobile devices</li>
                 <li><strong>Keyboard:</strong> Hold arrow keys or A/D to move the paddle</li>
-                <li><strong>Click / tap:</strong> Start and pause the game</li>
+                <li><strong>Pause:</strong> Click anywhere, or tap the &#10074;&#10074; button in the corner on mobile</li>
             </ul>
         </div>
 
@@ -226,6 +226,23 @@
         {
             const rect = canvas.getBoundingClientRect();
             return (pageX - rect.left) * (W / rect.width);
+        }
+
+        function canvasY(pageY)
+        {
+            const rect = canvas.getBoundingClientRect();
+            return (pageY - rect.top) * (H / rect.height);
+        }
+
+        // On-canvas pause button (top-right corner)
+        const PAUSE_BTN = { x: W - 58, y: 12, size: 46 };
+
+        function inPauseButton(x, y)
+        {
+            // Generous hit area for fingers
+            const pad = 10;
+            return x >= PAUSE_BTN.x - pad && x <= PAUSE_BTN.x + PAUSE_BTN.size + pad &&
+                   y >= PAUSE_BTN.y - pad && y <= PAUSE_BTN.y + PAUSE_BTN.size + pad;
         }
 
         function update(dt)
@@ -411,6 +428,24 @@
             ctx.fill();
             ctx.shadowBlur = 0;
 
+            // Pause button while playing
+            if (state === 'playing')
+            {
+                const b = PAUSE_BTN;
+                ctx.fillStyle = 'rgba(66, 220, 255, 0.12)';
+                ctx.strokeStyle = 'rgba(66, 220, 255, 0.5)';
+                ctx.lineWidth = 1.5;
+                ctx.beginPath();
+                ctx.roundRect(b.x, b.y, b.size, b.size, 10);
+                ctx.fill();
+                ctx.stroke();
+
+                // Two vertical bars
+                ctx.fillStyle = 'rgba(66, 220, 255, 0.85)';
+                ctx.fillRect(b.x + 14, b.y + 12, 6, 22);
+                ctx.fillRect(b.x + 26, b.y + 12, 6, 22);
+            }
+
             // Overlays for special states
             if (state !== 'playing')
             {
@@ -438,7 +473,7 @@
                     ctx.fillText('PAUSED', W / 2, H / 2 - 10);
                     ctx.fillStyle = '#ffffff';
                     ctx.font = '16px "Courier New", monospace';
-                    ctx.fillText('CLICK TO RESUME', W / 2, H / 2 + 28);
+                    ctx.fillText('TAP OR CLICK TO RESUME', W / 2, H / 2 + 28);
                 }
                 else
                 {
@@ -494,8 +529,20 @@
         {
             e.preventDefault();
 
+            const touch = e.targetTouches[0];
+
             if (state === 'idle')      { resetGame(); state = 'playing'; }
             else if (state === 'paused') state = 'playing';
+            else if (state === 'playing')
+            {
+                const x = canvasX(touch.clientX);
+                const y = canvasY(touch.clientY);
+
+                if (inPauseButton(x, y))
+                    state = 'paused';
+                else
+                    player.targetX = clampPaddle(x - PADDLE_W / 2);
+            }
         }, { passive: false });
 
         canvas.addEventListener('touchmove', function(e)
